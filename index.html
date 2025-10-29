@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Nex-In - Price Aggregator</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+* {
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+}
+
+body {
+font-family: 'Inter', sans-serif;
+-webkit-tap-highlight-color: transparent;
+padding-bottom: env(safe-area-inset-bottom, 80px);
+padding-top: env(safe-area-inset-top, 0px);
+overscroll-behavior-y: none;
+}
+
+::-webkit-scrollbar {
+width: 3px;
+}
+
+::-webkit-scrollbar-track {
+background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+background: #a8a29e;
+border-radius: 4px;
+}
+
+.size-button.active {
+background-color: #78716C !important;
+color: white !important;
+border-color: #78716C !important;
+}
+
+.mobile-header {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+z-index: 50;
+background: rgba(250, 248, 246, 0.98);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+padding-top: env(safe-area-inset-top, 0px);
+}
+
+.mobile-content {
+padding-top: calc(env(safe-area-inset-top, 0px) + 60px);
+padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 90px);
+min-height: 100vh;
+}
+
+.mobile-footer {
+position: fixed;
+bottom: 0;
+left: 0;
+right: 0;
+z-index: 50;
+padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.thumbnail-img {
+transition: all 0.2s;
+-webkit-tap-highlight-color: transparent;
+}
+
+.filter-modal {
+position: fixed;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: rgba(0, 0, 0, 0.6);
+z-index: 100;
+display: none;
+-webkit-overflow-scrolling: touch;
+}
+
+.filter-modal.active {
+display: block;
+}
+
+.filter-content {
+position: absolute;
+bottom: 0;
+left: 0;
+right: 0;
+background: white;
+border-radius: 20px 20px 0 0;
+max-height: 85vh;
+overflow-y: auto;
+-webkit-overflow-scrolling: touch;
+animation: slideUp 0.3s ease-out;
+padding-bottom: env(safe-area-inset-bottom, 20px);
+}
+
+@keyframes slideUp {
+from {
+transform: translateY(100%);
+}
+to {
+transform: translateY(0);
+}
+}
+
+.product-card {
+touch-action: manipulation;
+-webkit-tap-highlight-color: transparent;
+}
+
+button, a {
+-webkit-tap-highlight-color: transparent;
+touch-action: manipulation;
+}
+
+img {
+-webkit-user-select: none;
+user-select: none;
+}
+
+/* iPhone notch support */
+@supports (padding-top: env(safe-area-inset-top)) {
+.mobile-header {
+padding-top: env(safe-area-inset-top);
+}
+}
+
+/* Smooth scrolling for iOS */
+.scroll-smooth {
+-webkit-overflow-scrolling: touch;
+scroll-behavior: smooth;
+}
+
+/* Prevent pull-to-refresh */
+html, body {
+overscroll-behavior-y: contain;
+position: relative;
+}
+</style>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: {
+'primary-accent': '#78716C',
+'light-bg': '#FAF8F6',
+'card-surface': '#FFFFFF',
+'gemini-yellow': '#FBBF24',
+'premium-purple': '#8B5CF6',
+}
+}
+}
+}
+</script>
+</head>
+<body class="bg-light-bg text-gray-900">
+
+<!-- Mobile Header -->
+<header class="mobile-header shadow-md">
+<div class="py-3 px-4">
+<div class="flex justify-between items-center">
+<button onclick="setActiveTab('logo')" class="focus:outline-none active:opacity-70">
+<h1 class="text-2xl font-extrabold text-primary-accent tracking-wider">Nex-In</h1>
+</button>
+<button class="p-2 text-gray-600 active:opacity-70" onclick="alert('Notifications')">
+<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+<path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+</svg>
+</button>
+</div>
+</div>
+</header>
+
+<!-- Main Content -->
+<main id="content" class="mobile-content px-4 scroll-smooth">
+<p class="text-gray-600 text-center py-10">Loading...</p>
+</main>
+
+<!-- Filter Modal -->
+<div id="filter-modal" class="filter-modal" onclick="closeFilterModal()">
+<div class="filter-content" onclick="event.stopPropagation()">
+<div class="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center z-10">
+<h3 class="text-lg font-bold text-gray-800">Filters</h3>
+<button onclick="closeFilterModal()" class="text-gray-500 active:opacity-70">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+</svg>
+</button>
+</div>
+<div id="filter-modal-content" class="p-4"></div>
+</div>
+</div>
+
+<!-- Mobile Footer Navigation -->
+<footer class="mobile-footer bg-card-surface border-t border-gray-300 shadow-2xl">
+<nav class="flex justify-around py-2 px-2">
+<button data-tab="discover" onclick="setActiveTab('discover')" class="tab-btn flex flex-col items-center p-2 text-primary-accent transition duration-150 active:scale-95">
+<svg class="w-6 h-6 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+<span class="text-xs font-medium">Discover</span>
+</button>
+<button data-tab="search" onclick="openFilterModal()" class="tab-btn flex flex-col items-center p-2 text-gray-500 transition duration-150 active:scale-95">
+<svg class="w-6 h-6 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<circle cx="11" cy="11" r="8"></circle>
+<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+</svg>
+<span class="text-xs font-medium">Filter</span>
+</button>
+<button data-tab="wardrobe" onclick="setActiveTab('wardrobe')" class="tab-btn flex flex-col items-center p-2 text-gray-500 transition duration-150 active:scale-95">
+<svg class="w-6 h-6 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M12 20V10"></path>
+<path d="M18.4 17.6a10 10 0 1 0-16.8-5.2"></path>
+<path d="M14.5 9.5 12 12 9.5 9.5"></path>
+</svg>
+<span class="text-xs font-medium">Wardrobe</span>
+</button>
+<button data-tab="tracker" onclick="setActiveTab('tracker')" class="tab-btn flex flex-col items-center p-2 text-gray-500 transition duration-150 active:scale-95">
+<svg class="w-6 h-6 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M12 2v10l4 4"></path>
+<circle cx="12" cy="12" r="10"></circle>
+</svg>
+<span class="text-xs font-medium">Tracker</span>
+</button>
+<button data-tab="profile" onclick="setActiveTab('profile')" class="tab-btn flex flex-col items-center p-2 text-gray-500 transition duration-150 active:scale-95">
+<svg class="w-6 h-6 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+<circle cx="12" cy="7" r="4"></circle>
+</svg>
+<span class="text-xs font-medium">Profile</span>
+</button>
+</nav>
+</footer>
+
+<script>
+// Prevent iOS rubber band effect
+document.addEventListener('touchmove', function(e) {
+if (e.scale !== 1) { e.preventDefault(); }
+}, { passive: false });
+
+// Global State
+window.currentTab = 'logo';
+window.currentSearchQuery = '';
+window.currentProductDetailId = null;
+window.lastActiveTab = 'logo';
+window.activeCharts = [];
+window.currentCategoryFilter = null;
+window.subscriptionTier = 'Free';
+window.currentFilters = {
+priceRelevance: 'Best Price',
+brand: null,
+color: null,
+size: null
+};
+
+// Mock Data
+window.mockProducts = [
+{ id: 1, name: "Minimalist Leather Tote", brand: "Miraggio", category: "Bags", subcategory: "Totes", imageUrl: "https://m.media-amazon.com/images/I/811Pt0ZEo7L._AC_CR0%2C0%2C0%2C0_SX960_SY720_.jpg", imageUrls: ["https://m.media-amazon.com/images/I/61zyvYQ15+L._AC_CR0%2C0%2C0%2C0_SX960_SY720_.jpg"], prices: [{ platform: "Myntra", price: 3499, originalPrice: 4999, link: "#" }, { platform: "Ajio", price: 3550, originalPrice: 4999, link: "#" }], description: "A structured, full-grain leather tote bag with subtle logo detailing.", sizes: ['OS']},
+{ id: 2, name: "Oversized Knit Jumper", brand: "Zara", category: "Apparel", subcategory: "Outerwear", imageUrl: "https://static.zara.net/assets/public/0941/448d/84b448f9a06b/9c099cfea55e/02756141081-p/02756141081-p.jpg?ts=1761149252010&w=1280", imageUrls: ["https://static.zara.net/assets/public/35d6/600c/d09e412b9ac7/2d49ff73f07f/02756141081-a1/02756141081-a1.jpg?ts=1761149254670&w=1500"], prices: [{ platform: "Zara", price: 1899, originalPrice: 2299, link: "#" }], description: "Heavy-gauge cotton knit sweater with oversized fit.", sizes: ['S', 'M', 'L', 'XL']},
+{ id: 3, name: "Running Shoes Pro 3.0", brand: "Puma", category: "Footwear", subcategory: "Sneakers", imageUrl: "https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_900,h_900/global/400986/31/mod01/fnd/PNA/fmt/png/Speedcat-OG-Women's-Sneakers", imageUrls: [], prices: [{ platform: "Puma", price: 4999, originalPrice: 6599, link: "#" }], description: "High-performance running shoes with responsive cushioning.", sizes: ['UK 7', 'UK 8', 'UK 9']},
+{ id: 4, name: "Deep Navy Linen Shirt", brand: "H&M", category: "Apparel", subcategory: "Tops", imageUrl: "https://image.hm.com/assets/hm/9e/80/9e806c434b558d496d29e41d626044760d1c05f3.jpg?imwidth=1536", imageUrls: [], prices: [{ platform: "H&M", price: 1299, originalPrice: 1299, link: "#" }], description: "Lightweight 100% French linen shirt.", sizes: ['XS', 'S', 'M', 'L']},
+{ id: 5, name: "Skin Face Care Kit", brand: "Pilgrim", category: "Beauty", subcategory: "Skincare", imageUrl: "https://m.media-amazon.com/images/I/81PxrqBDucL._SX679_.jpg", imageUrls: [], prices: [{ platform: "Nykaa", price: 1199, originalPrice: 1500, link: "#" }], description: "Three best-selling facial serums for brightness and hydration.", sizes: ['OS']},
+{ id: 6, name: "Classic Denim Jeans", brand: "Levi's", category: "Apparel", subcategory: "Bottoms", imageUrl: "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQyqN4-GJZD3IDBzg68mL8uV3r6GdRbd34NiS5Jz4FKEuAihUT4dSLyFn21u1VjxBDtv3Upi_mTK-LkZ3sTNyJoekxmqAJ7hGE3BSkiX9A", imageUrls: [], prices: [{ platform: "Levi's", price: 2999, originalPrice: 3999, link: "#" }], description: "Iconic 501 fit with sustainable cotton denim.", sizes: ['28', '30', '32', '34']},
+];
+
+window.trackedItems = window.mockProducts.slice(0, 2);
+window.savedItems = window.mockProducts.slice(2, 4);
+window.productCategories = {
+Apparel: ['Tops', 'Bottoms', 'Dresses'],
+Footwear: ['Sneakers', 'Boots'],
+Bags: ['Totes', 'Backpacks'],
+Beauty: ['Skincare', 'Makeup'],
+};
+
+window.isPremium = () => window.subscriptionTier === 'Premium';
+
+// Utility Functions
+window.clearCharts = () => {
+window.activeCharts.forEach(chart => chart.destroy());
+window.activeCharts = [];
+};
+
+window.changeMainImage = (newSrc) => {
+const mainImage = document.getElementById('main-product-image');
+if (mainImage) {
+mainImage.src = newSrc;
+// Smooth scroll to top of image
+mainImage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+};
+
+// Filter Modal Functions
+window.openFilterModal = () => {
+renderFilterModal();
+document.getElementById('filter-modal').classList.add('active');
+document.body.style.overflow = 'hidden';
+};
+
+window.closeFilterModal = () => {
+document.getElementById('filter-modal').classList.remove('active');
+document.body.style.overflow = '';
+};
+
+window.renderFilterModal = () => {
+const brands = [...new Set(window.mockProducts.map(p => p.brand))].sort();
+const categories = Object.keys(window.productCategories);
+const current = window.currentFilters;
+
+const modalContent = document.getElementById('filter-modal-content');
+modalContent.innerHTML = `
+<div class="space-y-6 pb-6">
+<div>
+<label class="block text-sm font-semibold text-gray-700 mb-2">Search Products</label>
+<input id="mobile-search" type="text" placeholder="Search items..." 
+value="${window.currentSearchQuery}"
+class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-accent text-base">
+</div>
+
+<div>
+<label class="block text-sm font-semibold text-gray-700 mb-2">Price Focus</label>
+<div class="grid grid-cols-3 gap-2">
+${['Best Price', 'Highest Discount', 'Lowest Price'].map(opt => `
+<button onclick="window.currentFilters.priceRelevance = '${opt}'; renderFilterModal();"
+class="py-3 px-3 text-sm rounded-lg border transition active:scale-95 ${current.priceRelevance === opt ? 'bg-primary-accent text-white border-primary-accent' : 'bg-white text-gray-700 border-gray-300'}">
+${opt.replace(' Price', '').replace(' Discount', ' Disc.')}
+</button>
+`).join('')}
+</div>
+</div>
+
+<div>
+<label class="block text-sm font-semibold text-gray-700 mb-2">Brand</label>
+<div class="flex flex-wrap gap-2">
+${brands.map(brand => `
+<button onclick="window.currentFilters.brand = window.currentFilters.brand === '${brand}' ? null : '${brand}'; renderFilterModal();"
+class="py-2 px-4 text-sm rounded-full border transition active:scale-95 ${current.brand === brand ? 'bg-primary-accent text-white border-primary-accent' : 'bg-white text-gray-700 border-gray-300'}">
+${brand}
+</button>
+`).join('')}
+</div>
+</div>
+
+<div>
+<label class="block text-sm font-semibold text-gray-700 mb-2">Category</label>
+<div class="flex flex-wrap gap-2">
+${categories.map(cat => `
+<button onclick="window.currentCategoryFilter = window.currentCategoryFilter === '${cat}' ? null : '${cat}'; renderFilterModal();"
+class="py-2 px-4 text-sm rounded-full border transition active:scale-95 ${window.currentCategoryFilter === cat ? 'bg-primary-accent text-white border-primary-accent' : 'bg-white text-gray-700 border-gray-300'}">
+${cat}
+</button>
+`).join('')}
+</div>
+</div>
+
+<div class="flex gap-3 pt-4 border-t border-gray-200 sticky bottom-0 bg-white pb-safe">
+<button onclick="window.clearAllFilters(); closeFilterModal();" 
+class="flex-1 py-3 text-sm font-semibold text-red-600 border-2 border-red-600 rounded-lg active:scale-95">
+Clear All
+</button>
+<button onclick="applyMobileFilters();" 
+class="flex-1 py-3 text-sm font-semibold text-white bg-primary-accent rounded-lg active:scale-95">
+Apply Filters
+</button>
+</div>
+</div>
+`;
+};
+
+window.applyMobileFilters = () => {
+const searchInput = document.getElementById('mobile-search');
+window.currentSearchQuery = searchInput ? searchInput.value.trim() : '';
+closeFilterModal();
+setActiveTab('discover', window.currentSearchQuery);
+};
+
+window.clearAllFilters = () => {
+window.currentFilters = {
+priceRelevance: 'Best Price',
+brand: null,
+color: null,
+size: null
+};
+window.currentCategoryFilter = null;
+window.currentSearchQuery = '';
+};
+
+// Tab Navigation
+window.setActiveTab = (tab, searchQuery = '') => {
+window.clearCharts();
+
+if (tab === 'product-detail') {
+window.currentTab = window.lastActiveTab;
+} else if (tab !== 'logo') {
+window.currentTab = tab;
+window.lastActiveTab = tab;
+} else {
+window.currentTab = tab;
+}
+
+window.currentSearchQuery = searchQuery;
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+const isActive = btn.getAttribute('data-tab') === window.currentTab;
+btn.classList.toggle('text-primary-accent', isActive);
+btn.classList.toggle('text-gray-500', !isActive);
+});
+
+window.renderView(tab, searchQuery);
+window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+// Main Render Function
+window.renderView = (view, searchQuery) => {
+if (view === 'logo') {
+renderLogoPage();
+} else if (view === 'product-detail') {
+const product = window.mockProducts.find(p => p.id === window.currentProductDetailId);
+if (product) renderProductDetail(product);
+} else if (view === 'discover') {
+renderDiscoverContent(searchQuery);
+} else if (view === 'tracker') {
+renderTrackerContent();
+} else if (view === 'wardrobe') {
+renderWardrobeContent();
+} else if (view === 'profile') {
+renderProfilePage();
+}
+};
+
+// Logo Page
+window.renderLogoPage = () => {
+const contentDiv = document.getElementById('content');
+contentDiv.innerHTML = `
+<div class="space-y-6 pb-6">
+<div class="bg-card-surface shadow-lg rounded-xl overflow-hidden">
+<video autoplay muted loop playsinline class="w-full h-64 object-cover">
+<source src="https://diorama.dam-broadcast.com/pm_11872_1057_1057363-w0xxmcls1a-h265.mp4" type="video/mp4">
+</video>
+<div class="p-4">
+<h2 class="text-2xl font-bold text-primary-accent mb-2">Newest Arrivals</h2>
+<p class="text-sm text-gray-600">The future is neutral: core styles for every wardrobe</p>
+</div>
+</div>
+
+<div>
+<h3 class="text-xl font-bold text-gray-800 mb-3">Style Insights</h3>
+<div class="space-y-3">
+<div class="bg-card-surface rounded-xl shadow-md p-3 flex gap-3 active:opacity-90">
+<img src="https://img.freepik.com/premium-photo/coats-hanging-rack-clothing-store-coat-is-beige-there-are-several-different-colors-choose-from_197463-12344.jpg" 
+class="w-24 h-24 rounded-lg object-cover flex-shrink-0">
+<div>
+<p class="font-semibold text-sm text-gray-800 mb-1">Trend: Quiet Luxury</p>
+<p class="text-xs text-gray-600">Focus on fabric quality and timeless silhouettes.</p>
+</div>
+</div>
+
+<div class="bg-card-surface rounded-xl shadow-md p-3 flex gap-3 active:opacity-90">
+<img src="https://png.pngtree.com/thumb_back/fh260/background/20250601/pngtree-earth-tone-layers-in-rustic-artistic-composition-image_17372981.jpg" 
+class="w-24 h-24 rounded-lg object-cover flex-shrink-0">
+<div>
+<p class="font-semibold text-sm text-gray-800 mb-1">Deep Earth Tones</p>
+<p class="text-xs text-gray-600">Rich browns and olives dominating this season.</p>
+</div>
+</div>
+</div>
+</div>
+
+<button onclick="setActiveTab('discover')" 
+class="w-full py-4 bg-primary-accent text-white font-semibold rounded-xl shadow-lg active:scale-98 transition-transform">
+Discover & Explore
+</button>
+</div>
+`;
+};
+
+// Discover Content
+window.renderDiscoverContent = (searchQuery) => {
+const contentDiv = document.getElementById('content');
+
+let filteredProducts = window.mockProducts.filter(p => {
+let match = true;
+if (searchQuery) {
+const query = searchQuery.toLowerCase();
+match = match && (p.name.toLowerCase().includes(query) || p.brand.toLowerCase().includes(query));
+}
+if (window.currentFilters.brand) {
+match = match && p.brand === window.currentFilters.brand;
+}
+if (window.currentCategoryFilter) {
+match = match && p.category === window.currentCategoryFilter;
+}
+return match;
+});
+
+const priceRelevance = window.currentFilters.priceRelevance;
+if (priceRelevance === 'Highest Discount') {
+filteredProducts.sort((a, b) => {
+const discountA = 1 - (Math.min(...a.prices.map(p => p.price)) / a.prices[0].originalPrice);
+const discountB = 1 - (Math.min(...b.prices.map(p => p.price)) / b.prices[0].originalPrice);
+return discountB - discountA;
+});
+} else if (priceRelevance === 'Lowest Price') {
+filteredProducts.sort((a, b) => 
+Math.min(...a.prices.map(p => p.price)) - Math.min(...b.prices.map(p => p.price))
+);
+}
+
+contentDiv.innerHTML = `
+<div class="space-y-4 pb-6">
+<div>
+<h2 class="text-2xl font-bold text-gray-900 mb-1">
+${searchQuery ? `"${searchQuery}"` : 'Discover'}
+</h2>
+<p class="text-sm text-gray-600">${filteredProducts.length} products • ${priceRelevance}</p>
+</div>
+
+<div class="grid grid-cols-2 gap-3">
+${filteredProducts.map(product => {
+const minPrice = Math.min(...product.prices.map(p => p.price));
+const originalPrice = product.prices[0].originalPrice;
+const discount = Math.round(((originalPrice - minPrice) / originalPrice) * 100);
+
+return `
+<div class="product-card bg-card-surface rounded-xl shadow-md overflow-hidden active:opacity-90 transition-opacity"
+onclick="window.currentProductDetailId = ${product.id}; setActiveTab('product-detail');">
+<div class="relative">
+<img src="${product.imageUrl}" alt="${product.name}" class="w-full h-48 object-cover">
+${discount > 0 ? `<div class="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">-${discount}%</div>` : ''}
+</div>
+<div class="p-3">
+<p class="text-xs text-gray-500 truncate">${product.brand}</p>
+<h3 class="text-sm font-semibold text-gray-900 truncate">${product.name}</h3>
+<p class="mt-1 text-lg font-bold text-primary-accent">₹${minPrice.toLocaleString('en-IN')}</p>
+${discount > 0 ? `<p class="text-xs text-gray-500 line-through">₹${originalPrice.toLocaleString('en-IN')}</p>` : ''}
+</div>
+</div>
+`;
+}).join('')}
+</div>
+
+${filteredProducts.length === 0 ? '<div class="text-center py-16 text-gray-500">No products found. Try different filters.</div>' : ''}
+</div>
+`;
+};
+
+// Product Detail
+window.renderProductDetail = (product) => {
+const contentDiv = document.getElementById('content');
+const minPrice = Math.min(...product.prices.map(p => p.price));
+const discount = Math.round(((product.prices[0].originalPrice - minPrice) / product.prices[0].originalPrice) * 100);
+
+contentDiv.innerHTML = `
+<div class="space-y-4 pb-6">
+<button onclick="setActiveTab(window.lastActiveTab)"
+class="flex items-center text-primary-accent font-medium mb-2 active:opacity-70">
+<svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+</svg>
+Back
+</button>
+
+<div class="bg-card-surface rounded-xl shadow-lg overflow-hidden">
+<div class="relative">
+<img id="main-product-image" src="${product.imageUrl}" alt="${product.name}" class="w-full h-80 object-cover">
+${discount > 0 ? `<div class="absolute top-3 right-3 bg-red-600 text-white text-sm font-bold px-3 py-2 rounded-full shadow-lg">-${discount}%</div>` : ''}
+</div>
+${product.imageUrls.length > 0 ? `
+<div class="flex gap-2 p-3 overflow-x-auto">
+${[product.imageUrl, ...product.imageUrls].map(url => `
+<img src="${url}" class="thumbnail-img w-16 h-16 object-cover rounded-lg border-2 border-gray-200 cursor-pointer active:border-primary-accent flex-shrink-0" 
+onclick="changeMainImage('${url}')">
+`).join('')}
+</div>
+` : ''}
+</div>
+
+<div class="bg-card-surface rounded-xl shadow-lg p-4">
+<h1 class="text-2xl font-bold text-gray-900 mb-1">${product.name}</h1>
+<p class="text-lg text-primary-accent font-semibold mb-4">${product.brand}</p>
+
+<div class="bg-light-bg rounded-lg p-4 mb-4">
+<h3 class="text-sm font-bold text-gray-800 mb-3 flex items-center">
+<svg class="w-4 h-4 mr-1 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+</svg>
+Best Price: ₹${minPrice.toLocaleString('en-IN')}
+</h3>
+<div class="space-y-2">
+${product.prices.map(p => `
+<div class="flex justify-between items-center text-sm">
+<span class="font-medium text-gray-700">${p.platform}</span>
+<div class="flex items-center gap-2">
+<span class="text-xs text-gray-500 line-through">₹${p.originalPrice.toLocaleString('en-IN')}</span>
+<span class="font-bold text-red-600">₹${p.price.toLocaleString('en-IN')}</span>
+<a href="${p.link}" class="text-xs bg-primary-accent text-white px-3 py-1 rounded-full active:opacity-80">Shop</a>
+</div>
+</div>
+`).join('')}
+</div>
+</div>
+
+<div class="mb-4">
+<p class="font-semibold text-gray-800 mb-2 text-sm">Available Sizes</p>
+<div class="flex flex-wrap gap-2">
+${product.sizes.map(size => `
+<button class="size-button py-2 px-4 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 active:bg-gray-100">
+${size}
+</button>
+`).join('')}
+</div>
+</div>
+
+<div class="mb-4">
+<p class="font-semibold text-gray-800 mb-2 text-sm">Product Details</p>
+<p class="text-sm text-gray-700 leading-relaxed">${product.description}</p>
+</div>
+
+<div class="bg-gradient-to-br from-purple-50 to-white rounded-lg p-4 border border-purple-200">
+<h3 class="text-base font-bold text-premium-purple mb-2 flex items-center">
+<svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+</svg>
+AI Price Insight
+</h3>
+<p class="text-sm text-gray-700 leading-relaxed">
+${window.isPremium() ? 
+'The price is currently 5% above its 6-month low. The trend has been stable. <strong>Recommendation: BUY NOW.</strong> Further drops unlikely.' :
+'<span class="text-premium-purple font-semibold">Upgrade to Premium</span> to unlock AI-powered price predictions and styling recommendations.'}
+</p>
+${!window.isPremium() ? `
+<button onclick="setActiveTab('profile')" class="w-full mt-3 py-3 bg-premium-purple text-white text-sm font-semibold rounded-lg active:scale-98 transition-transform">
+Upgrade to Premium
+</button>
+` : ''}
+</div>
+</div>
+
+<div class="flex gap-3">
+<button onclick="alert('Added to tracker')" class="flex-1 py-4 bg-primary-accent text-white font-semibold rounded-xl active:scale-98 transition-transform">
+Track Price
+</button>
+<button onclick="alert('Saved to wardrobe')" class="flex-1 py-4 border-2 border-primary-accent text-primary-accent font-semibold rounded-xl active:scale-98 transition-transform">
+Save Item
+</button>
+</div>
+</div>
+`;
+};
+
+// Tracker Content
+window.renderTrackerContent = () => {
+const contentDiv = document.getElementById('content');
+contentDiv.innerHTML = `
+<div class="space-y-4 pb-6">
+<div>
+<h2 class="text-2xl font-bold text-gray-900 mb-1">Price Tracker</h2>
+<p class="text-sm text-gray-600">${window.trackedItems.length} items tracked</p>
+</div>
+
+<div class="space-y-3">
+${window.trackedItems.map(p => {
+const minPrice = Math.min(...p.prices.map(price => price.price));
+return `
+<div class="bg-card-surface rounded-xl shadow-md p-4 flex gap-3 active:opacity-90 transition-opacity"
+onclick="window.currentProductDetailId = ${p.id}; setActiveTab('product-detail');">
+<img src="${p.imageUrl}" alt="${p.name}" class="w-20 h-20 object-cover rounded-lg flex-shrink-0">
+<div class="flex-1 min-w-0">
+<h3 class="text-base font-semibold text-gray-900 truncate">${p.name}</h3>
+<p class="text-sm text-gray-500 truncate">${p.brand}</p>
+<div class="mt-2 flex items-baseline gap-2">
+<p class="text-lg font-bold text-green-600">₹${minPrice.toLocaleString('en-IN')}</p>
+<p class="text-xs text-gray-500 line-through">₹${p.prices[0].originalPrice.toLocaleString('en-IN')}</p>
+</div>
+</div>
+</div>
+`;
+}).join('')}
+${window.trackedItems.length === 0 ? `
+<div class="text-center py-16 bg-card-surface rounded-xl shadow-md">
+<svg class="w-16 h-16 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+</svg>
+<p class="text-gray-600 mb-2 font-medium">No items tracked yet</p>
+<p class="text-sm text-gray-500 px-8">Start tracking from the Discover page to get price drop alerts</p>
+</div>
+` : ''}
+</div>
+
+${window.trackedItems.length > 0 ? `
+<div class="bg-light-bg rounded-xl p-4">
+<h3 class="font-semibold text-gray-800 mb-3">Tracking Stats</h3>
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-white rounded-lg p-4 shadow-sm">
+<p class="text-xs text-gray-600 mb-1">Avg. Discount</p>
+<p class="text-2xl font-bold text-green-600">15%</p>
+</div>
+<div class="bg-white rounded-lg p-4 shadow-sm">
+<p class="text-xs text-gray-600 mb-1">Total Savings</p>
+<p class="text-2xl font-bold text-primary-accent">₹2,450</p>
+</div>
+</div>
+</div>
+` : ''}
+</div>
+`;
+};
+
+// Wardrobe Content
+window.renderWardrobeContent = () => {
+const contentDiv = document.getElementById('content');
+contentDiv.innerHTML = `
+<div class="space-y-4 pb-6">
+<div>
+<h2 class="text-2xl font-bold text-gray-900 mb-1">My Wardrobe</h2>
+<p class="text-sm text-gray-600">${window.savedItems.length} saved items</p>
+</div>
+
+<div class="grid grid-cols-2 gap-3">
+${window.savedItems.map(p => `
+<div class="bg-card-surface rounded-xl shadow-md overflow-hidden active:opacity-90 transition-opacity"
+onclick="window.currentProductDetailId = ${p.id}; setActiveTab('product-detail');">
+<img src="${p.imageUrl}" alt="${p.name}" class="w-full h-40 object-cover">
+<div class="p-3">
+<h3 class="text-sm font-semibold text-gray-900 truncate">${p.name}</h3>
+<p class="text-xs text-gray-500 truncate">${p.brand}</p>
+<p class="text-xs text-gray-400 mt-1">${p.category}</p>
+</div>
+</div>
+`).join('')}
+</div>
+
+${window.savedItems.length === 0 ? `
+<div class="text-center py-16 bg-card-surface rounded-xl shadow-md">
+<svg class="w-16 h-16 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+</svg>
+<p class="text-gray-600 mb-2 font-medium">Your wardrobe is empty</p>
+<p class="text-sm text-gray-500 px-8">Save items from Discover to build your collection</p>
+</div>
+` : ''}
+
+${window.savedItems.length > 0 ? `
+<div class="bg-gradient-to-br from-purple-50 to-white rounded-xl p-4 border border-purple-200">
+<h3 class="font-semibold text-premium-purple mb-2 flex items-center">
+<svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m4-2H2m18-10h-4M3 13h2"></path>
+</svg>
+AI Outfit Generator
+</h3>
+<p class="text-sm text-gray-700 mb-3">Get personalized outfit combinations from your saved items using AI.</p>
+<button onclick="alert('Premium Feature: AI Outfit Generator')" 
+class="w-full py-3 bg-premium-purple text-white font-semibold rounded-lg text-sm active:scale-98 transition-transform">
+Generate Outfit (Premium)
+</button>
+</div>
+` : ''}
+</div>
+`;
+};
+
+// Profile Page
+window.renderProfilePage = () => {
+const contentDiv = document.getElementById('content');
+const isPremium = window.isPremium();
+const premiumFeatures = ['AI Price Prediction', 'AI Stylist', 'Unlimited Tracking', 'Detailed Charts'];
+const freeFeatures = ['Price Aggregation', 'Basic Filtering', 'Product Discovery'];
+
+contentDiv.innerHTML = `
+<div class="space-y-4 pb-6">
+<h2 class="text-2xl font-bold text-gray-900 mb-4">Account</h2>
+
+<div class="bg-card-surface rounded-xl shadow-lg p-4">
+<h3 class="text-lg font-bold text-gray-800 mb-3 pb-2 border-b border-gray-200">Profile Info</h3>
+<div class="space-y-2 text-sm">
+<div class="flex justify-between">
+<span class="text-gray-600">Name:</span>
+<span class="font-medium">Ellie Johnson</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-gray-600">Email:</span>
+<span class="font-medium text-xs">ellie.johnson@example.com</span>
+</div>
+<div class="flex justify-between">
+<span class="text-gray-600">Mobile:</span>
+<span class="font-medium">+1 (555) 123-4567</span>
+</div>
+</div>
+<button onclick="alert('Edit profile')" class="mt-3 text-sm text-primary-accent font-medium active:opacity-70">
+Edit Profile →
+</button>
+</div>
+
+<div class="${isPremium ? 'bg-gradient-to-br from-purple-50 to-white border-2 border-purple-200' : 'bg-card-surface border border-gray-300'} rounded-xl shadow-lg p-4">
+<div class="flex justify-between items-center mb-3">
+<h3 class="text-xl font-bold ${isPremium ? 'text-premium-purple' : 'text-primary-accent'}">
+Nex-In ${window.subscriptionTier}
+</h3>
+<span class="text-xs font-semibold px-2 py-1 rounded-full ${isPremium ? 'bg-premium-purple text-white' : 'bg-gray-200 text-gray-700'}">
+${isPremium ? 'Active' : 'Current'}
+</span>
+</div>
+
+<div class="grid grid-cols-2 gap-3 mb-4">
+<div>
+<h4 class="text-xs font-semibold mb-2 ${isPremium ? 'text-premium-purple' : 'text-primary-accent'}">Included:</h4>
+<ul class="text-xs space-y-1">
+${(isPremium ? premiumFeatures : freeFeatures).map(f => `
+<li class="flex items-start">
+<span class="${isPremium ? 'text-premium-purple' : 'text-primary-accent'} mr-1">✓</span>
+<span>${f}</span>
+</li>
+`).join('')}
+</ul>
+</div>
+<div>
+<h4 class="text-xs font-semibold mb-2 text-red-500">Excluded:</h4>
+<ul class="text-xs space-y-1 text-gray-500">
+${(!isPremium ? premiumFeatures : freeFeatures).map(f => `
+<li class="flex items-start">
+<span class="text-red-500 mr-1">✗</span>
+<span>${f}</span>
+</li>
+`).join('')}
+</ul>
+</div>
+</div>
+
+${!isPremium ? `
+<button onclick="window.subscriptionTier = 'Premium'; renderView('profile');" 
+class="w-full py-4 bg-premium-purple text-white font-bold rounded-xl text-sm active:scale-98 transition-transform">
+Upgrade to Premium - ₹199/mo
+</button>
+` : `
+<p class="text-center text-sm text-gray-600">Thanks for being a Premium member! 🎉</p>
+`}
+</div>
+
+<div class="space-y-3">
+<h3 class="text-lg font-bold text-gray-800">Settings</h3>
+<button class="w-full flex justify-between items-center py-4 px-4 bg-card-surface rounded-xl border border-gray-200 active:bg-gray-50">
+<span class="text-sm text-gray-700">Price Drop Notifications</span>
+<span class="text-sm font-medium text-primary-accent">ON</span>
+</button>
+<button class="w-full flex justify-between items-center py-4 px-4 bg-card-surface rounded-xl border border-gray-200 active:bg-gray-50">
+<span class="text-sm text-gray-700">Dark Mode</span>
+<span class="text-sm font-medium text-gray-500">OFF</span>
+</button>
+</div>
+
+<button onclick="alert('Signed out')" 
+class="w-full py-4 bg-gray-100 text-gray-600 font-semibold rounded-xl text-sm active:bg-gray-200">
+Sign Out
+</button>
+</div>
+`;
+};
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+setActiveTab('logo');
+});
+</script>
+</body>
+</html>
