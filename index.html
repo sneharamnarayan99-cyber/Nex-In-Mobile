@@ -22,6 +22,7 @@ font-family: 'Inter', sans-serif;
 padding-bottom: env(safe-area-inset-bottom, 80px);
 padding-top: env(safe-area-inset-top, 0px);
 overscroll-behavior-y: none;
+background: linear-gradient(135deg, #FAF8F6 0%, #F5F1ED 100%);
 }
 
 ::-webkit-scrollbar {
@@ -33,14 +34,112 @@ background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-background: #a8a29e;
+background: linear-gradient(180deg, #78716C 0%, #a8a29e 100%);
 border-radius: 4px;
 }
 
+/* Glass morphism effects */
+.glass-card {
+background: rgba(255, 255, 255, 0.7);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+border: 1px solid rgba(255, 255, 255, 0.3);
+box-shadow: 0 8px 32px rgba(120, 113, 108, 0.1);
+}
+
+.glass-header {
+background: rgba(250, 248, 246, 0.85);
+backdrop-filter: blur(30px);
+-webkit-backdrop-filter: blur(30px);
+border-bottom: 1px solid rgba(120, 113, 108, 0.1);
+}
+
+.glass-footer {
+background: rgba(255, 255, 255, 0.9);
+backdrop-filter: blur(30px);
+-webkit-backdrop-filter: blur(30px);
+border-top: 1px solid rgba(120, 113, 108, 0.1);
+}
+
+/* Floating animation */
+@keyframes float {
+0%, 100% { transform: translateY(0px); }
+50% { transform: translateY(-10px); }
+}
+
+.float-animation {
+animation: float 3s ease-in-out infinite;
+}
+
+/* Glow effects */
+.glow-accent {
+box-shadow: 0 0 20px rgba(120, 113, 108, 0.3),
+0 0 40px rgba(120, 113, 108, 0.1);
+}
+
+.glow-premium {
+box-shadow: 0 0 20px rgba(139, 92, 246, 0.3),
+0 0 40px rgba(139, 92, 246, 0.1);
+}
+
+/* Holographic effect */
+.holographic {
+background: linear-gradient(135deg, 
+rgba(120, 113, 108, 1) 0%, 
+rgba(168, 162, 158, 1) 25%,
+rgba(120, 113, 108, 1) 50%,
+rgba(168, 162, 158, 1) 75%,
+rgba(120, 113, 108, 1) 100%);
+background-size: 200% 200%;
+animation: holographic-shimmer 3s ease infinite;
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+
+@keyframes holographic-shimmer {
+0%, 100% { background-position: 0% 50%; }
+50% { background-position: 100% 50%; }
+}
+
+/* Enhanced buttons */
+.futuristic-btn {
+position: relative;
+overflow: hidden;
+transition: all 0.3s ease;
+}
+
+.futuristic-btn::before {
+content: '';
+position: absolute;
+top: 0;
+left: -100%;
+width: 100%;
+height: 100%;
+background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+transition: left 0.5s ease;
+}
+
+.futuristic-btn:active::before {
+left: 100%;
+}
+
+/* Size button active state */
+.size-button {
+transition: all 0.3s ease;
+position: relative;
+}
+
 .size-button.active {
-background-color: #78716C !important;
+background: linear-gradient(135deg, #78716C 0%, #57524f 100%) !important;
 color: white !important;
 border-color: #78716C !important;
+transform: scale(1.05);
+box-shadow: 0 4px 12px rgba(120, 113, 108, 0.3);
+}
+
+.size-button:active {
+transform: scale(0.95);
 }
 
 .mobile-header {
@@ -49,15 +148,12 @@ top: 0;
 left: 0;
 right: 0;
 z-index: 50;
-background: rgba(250, 248, 246, 0.98);
-backdrop-filter: blur(20px);
--webkit-backdrop-filter: blur(20px);
 padding-top: env(safe-area-inset-top, 0px);
 }
 
 .mobile-content {
-padding-top: calc(env(safe-area-inset-top, 0px) + 60px);
-padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 90px);
+padding-top: calc(env(safe-area-inset-top, 0px) + 70px);
+padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 100px);
 min-height: 100vh;
 }
 
@@ -70,11 +166,51 @@ z-index: 50;
 padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-.thumbnail-img {
-transition: all 0.2s;
+/* Enhanced product cards */
+.product-card {
+touch-action: manipulation;
 -webkit-tap-highlight-color: transparent;
+transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+position: relative;
+overflow: hidden;
 }
 
+.product-card::before {
+content: '';
+position: absolute;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background: linear-gradient(135deg, rgba(120, 113, 108, 0.1) 0%, transparent 100%);
+opacity: 0;
+transition: opacity 0.3s ease;
+pointer-events: none;
+z-index: 1;
+}
+
+.product-card:active {
+transform: scale(0.97);
+}
+
+.product-card:active::before {
+opacity: 1;
+}
+
+/* Thumbnail hover effect */
+.thumbnail-img {
+transition: all 0.3s ease;
+-webkit-tap-highlight-color: transparent;
+position: relative;
+}
+
+.thumbnail-img:active {
+transform: scale(0.95);
+border-color: #78716C !important;
+box-shadow: 0 0 0 2px rgba(120, 113, 108, 0.3);
+}
+
+/* Filter modal */
 .filter-modal {
 position: fixed;
 top: 0;
@@ -82,6 +218,7 @@ left: 0;
 right: 0;
 bottom: 0;
 background: rgba(0, 0, 0, 0.6);
+backdrop-filter: blur(8px);
 z-index: 100;
 display: none;
 -webkit-overflow-scrolling: touch;
@@ -89,6 +226,12 @@ display: none;
 
 .filter-modal.active {
 display: block;
+animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+from { opacity: 0; }
+to { opacity: 1; }
 }
 
 .filter-content {
@@ -96,27 +239,76 @@ position: absolute;
 bottom: 0;
 left: 0;
 right: 0;
-background: white;
-border-radius: 20px 20px 0 0;
+background: rgba(255, 255, 255, 0.95);
+backdrop-filter: blur(30px);
+-webkit-backdrop-filter: blur(30px);
+border-radius: 24px 24px 0 0;
 max-height: 85vh;
 overflow-y: auto;
 -webkit-overflow-scrolling: touch;
-animation: slideUp 0.3s ease-out;
+animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 padding-bottom: env(safe-area-inset-bottom, 20px);
+box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes slideUp {
 from {
 transform: translateY(100%);
+opacity: 0;
 }
 to {
+transform: translateY(0);
+opacity: 1;
+}
+}
+
+/* Tab navigation icons */
+.tab-btn {
+position: relative;
+transition: all 0.3s ease;
+}
+
+.tab-btn.active svg {
+filter: drop-shadow(0 0 8px rgba(120, 113, 108, 0.5));
+}
+
+.tab-btn:active {
+transform: scale(0.9);
+}
+
+/* Discount badge */
+.discount-badge {
+background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+0%, 100% { transform: scale(1); }
+50% { transform: scale(1.05); }
+}
+
+/* Enhanced inputs */
+input:focus {
+outline: none;
+border-color: #78716C;
+box-shadow: 0 0 0 3px rgba(120, 113, 108, 0.1);
+}
+
+/* Stagger animation for cards */
+@keyframes fadeInUp {
+from {
+opacity: 0;
+transform: translateY(20px);
+}
+to {
+opacity: 1;
 transform: translateY(0);
 }
 }
 
-.product-card {
-touch-action: manipulation;
--webkit-tap-highlight-color: transparent;
+.stagger-animation {
+animation: fadeInUp 0.5s ease forwards;
 }
 
 button, a {
@@ -129,23 +321,14 @@ img {
 user-select: none;
 }
 
-/* iPhone notch support */
-@supports (padding-top: env(safe-area-inset-top)) {
-.mobile-header {
-padding-top: env(safe-area-inset-top);
-}
-}
-
-/* Smooth scrolling for iOS */
-.scroll-smooth {
--webkit-overflow-scrolling: touch;
-scroll-behavior: smooth;
-}
-
-/* Prevent pull-to-refresh */
 html, body {
 overscroll-behavior-y: contain;
 position: relative;
+}
+
+.scroll-smooth {
+-webkit-overflow-scrolling: touch;
+scroll-behavior: smooth;
 }
 </style>
 <script>
@@ -167,14 +350,14 @@ colors: {
 <body class="bg-light-bg text-gray-900">
 
 <!-- Mobile Header -->
-<header class="mobile-header shadow-md">
-<div class="py-3 px-4">
+<header class="mobile-header glass-header shadow-lg">
+<div class="py-4 px-5">
 <div class="flex justify-between items-center">
-<button onclick="setActiveTab('logo')" class="focus:outline-none active:opacity-70">
-<h1 class="text-2xl font-extrabold text-primary-accent tracking-wider">Nex-In</h1>
+<button onclick="setActiveTab('logo')" class="focus:outline-none active:opacity-70 transition-all">
+<h1 class="text-2xl font-extrabold text-primary-accent tracking-wider holographic">Nex-In</h1>
 </button>
-<button class="p-2 text-gray-600 active:opacity-70" onclick="alert('Notifications')">
-<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<button class="p-2 text-gray-600 active:opacity-70 transition-all hover:text-primary-accent" onclick="alert('Notifications')">
+<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
 <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
 </svg>
@@ -191,56 +374,56 @@ colors: {
 <!-- Filter Modal -->
 <div id="filter-modal" class="filter-modal" onclick="closeFilterModal()">
 <div class="filter-content" onclick="event.stopPropagation()">
-<div class="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center z-10">
-<h3 class="text-lg font-bold text-gray-800">Filters</h3>
-<button onclick="closeFilterModal()" class="text-gray-500 active:opacity-70">
-<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+<div class="sticky top-0 bg-white/95 backdrop-blur-xl border-b border-gray-200 p-5 flex justify-between items-center z-10">
+<h3 class="text-xl font-bold text-gray-800">Filters</h3>
+<button onclick="closeFilterModal()" class="text-gray-500 active:opacity-70 transition-all p-2 hover:bg-gray-100 rounded-full">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
 </svg>
 </button>
 </div>
-<div id="filter-modal-content" class="p-4"></div>
+<div id="filter-modal-content" class="p-5"></div>
 </div>
 </div>
 
 <!-- Mobile Footer Navigation -->
-<footer class="mobile-footer bg-card-surface border-t border-gray-300 shadow-2xl">
-<nav class="flex justify-around py-2 px-2">
-<button data-tab="discover" onclick="setActiveTab('discover')" class="tab-btn flex flex-col items-center p-2 text-primary-accent transition duration-150 active:scale-95">
-<svg class="w-6 h-6 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<footer class="mobile-footer glass-footer shadow-2xl">
+<nav class="flex justify-around py-3 px-2">
+<button data-tab="discover" onclick="setActiveTab('discover')" class="tab-btn flex flex-col items-center p-2 text-primary-accent transition-all duration-300 active">
+<svg class="w-7 h-7 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
 <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
 <polyline points="9 22 9 12 15 12 15 22"></polyline>
 </svg>
-<span class="text-xs font-medium">Discover</span>
+<span class="text-xs font-semibold">Discover</span>
 </button>
-<button data-tab="search" onclick="openFilterModal()" class="tab-btn flex flex-col items-center p-2 text-gray-500 transition duration-150 active:scale-95">
-<svg class="w-6 h-6 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<button data-tab="search" onclick="openFilterModal()" class="tab-btn flex flex-col items-center p-2 text-gray-500 transition-all duration-300">
+<svg class="w-7 h-7 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
 <circle cx="11" cy="11" r="8"></circle>
 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
 </svg>
-<span class="text-xs font-medium">Filter</span>
+<span class="text-xs font-semibold">Filter</span>
 </button>
-<button data-tab="wardrobe" onclick="setActiveTab('wardrobe')" class="tab-btn flex flex-col items-center p-2 text-gray-500 transition duration-150 active:scale-95">
-<svg class="w-6 h-6 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<button data-tab="wardrobe" onclick="setActiveTab('wardrobe')" class="tab-btn flex flex-col items-center p-2 text-gray-500 transition-all duration-300">
+<svg class="w-7 h-7 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
 <path d="M12 20V10"></path>
 <path d="M18.4 17.6a10 10 0 1 0-16.8-5.2"></path>
 <path d="M14.5 9.5 12 12 9.5 9.5"></path>
 </svg>
-<span class="text-xs font-medium">Wardrobe</span>
+<span class="text-xs font-semibold">Wardrobe</span>
 </button>
-<button data-tab="tracker" onclick="setActiveTab('tracker')" class="tab-btn flex flex-col items-center p-2 text-gray-500 transition duration-150 active:scale-95">
-<svg class="w-6 h-6 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<button data-tab="tracker" onclick="setActiveTab('tracker')" class="tab-btn flex flex-col items-center p-2 text-gray-500 transition-all duration-300">
+<svg class="w-7 h-7 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
 <path d="M12 2v10l4 4"></path>
 <circle cx="12" cy="12" r="10"></circle>
 </svg>
-<span class="text-xs font-medium">Tracker</span>
+<span class="text-xs font-semibold">Tracker</span>
 </button>
-<button data-tab="profile" onclick="setActiveTab('profile')" class="tab-btn flex flex-col items-center p-2 text-gray-500 transition duration-150 active:scale-95">
-<svg class="w-6 h-6 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+<button data-tab="profile" onclick="setActiveTab('profile')" class="tab-btn flex flex-col items-center p-2 text-gray-500 transition-all duration-300">
+<svg class="w-7 h-7 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
 <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
 <circle cx="12" cy="7" r="4"></circle>
 </svg>
-<span class="text-xs font-medium">Profile</span>
+<span class="text-xs font-semibold">Profile</span>
 </button>
 </nav>
 </footer>
@@ -259,6 +442,7 @@ window.lastActiveTab = 'logo';
 window.activeCharts = [];
 window.currentCategoryFilter = null;
 window.subscriptionTier = 'Free';
+window.isLoggedIn = localStorage.getItem('nexin_logged_in') === 'true';
 window.currentFilters = {
 priceRelevance: 'Best Price',
 brand: null,
@@ -268,12 +452,12 @@ size: null
 
 // Mock Data
 window.mockProducts = [
-{ id: 1, name: "Minimalist Leather Tote", brand: "Miraggio", category: "Bags", subcategory: "Totes", imageUrl: "https://m.media-amazon.com/images/I/811Pt0ZEo7L._AC_CR0%2C0%2C0%2C0_SX960_SY720_.jpg", imageUrls: ["https://m.media-amazon.com/images/I/61zyvYQ15+L._AC_CR0%2C0%2C0%2C0_SX960_SY720_.jpg"], prices: [{ platform: "Myntra", price: 3499, originalPrice: 4999, link: "#" }, { platform: "Ajio", price: 3550, originalPrice: 4999, link: "#" }], description: "A structured, full-grain leather tote bag with subtle logo detailing.", sizes: ['OS']},
-{ id: 2, name: "Oversized Knit Jumper", brand: "Zara", category: "Apparel", subcategory: "Outerwear", imageUrl: "https://static.zara.net/assets/public/0941/448d/84b448f9a06b/9c099cfea55e/02756141081-p/02756141081-p.jpg?ts=1761149252010&w=1280", imageUrls: ["https://static.zara.net/assets/public/35d6/600c/d09e412b9ac7/2d49ff73f07f/02756141081-a1/02756141081-a1.jpg?ts=1761149254670&w=1500"], prices: [{ platform: "Zara", price: 1899, originalPrice: 2299, link: "#" }], description: "Heavy-gauge cotton knit sweater with oversized fit.", sizes: ['S', 'M', 'L', 'XL']},
-{ id: 3, name: "Running Shoes Pro 3.0", brand: "Puma", category: "Footwear", subcategory: "Sneakers", imageUrl: "https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_900,h_900/global/400986/31/mod01/fnd/PNA/fmt/png/Speedcat-OG-Women's-Sneakers", imageUrls: [], prices: [{ platform: "Puma", price: 4999, originalPrice: 6599, link: "#" }], description: "High-performance running shoes with responsive cushioning.", sizes: ['UK 7', 'UK 8', 'UK 9']},
-{ id: 4, name: "Deep Navy Linen Shirt", brand: "H&M", category: "Apparel", subcategory: "Tops", imageUrl: "https://image.hm.com/assets/hm/9e/80/9e806c434b558d496d29e41d626044760d1c05f3.jpg?imwidth=1536", imageUrls: [], prices: [{ platform: "H&M", price: 1299, originalPrice: 1299, link: "#" }], description: "Lightweight 100% French linen shirt.", sizes: ['XS', 'S', 'M', 'L']},
-{ id: 5, name: "Skin Face Care Kit", brand: "Pilgrim", category: "Beauty", subcategory: "Skincare", imageUrl: "https://m.media-amazon.com/images/I/81PxrqBDucL._SX679_.jpg", imageUrls: [], prices: [{ platform: "Nykaa", price: 1199, originalPrice: 1500, link: "#" }], description: "Three best-selling facial serums for brightness and hydration.", sizes: ['OS']},
-{ id: 6, name: "Classic Denim Jeans", brand: "Levi's", category: "Apparel", subcategory: "Bottoms", imageUrl: "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQyqN4-GJZD3IDBzg68mL8uV3r6GdRbd34NiS5Jz4FKEuAihUT4dSLyFn21u1VjxBDtv3Upi_mTK-LkZ3sTNyJoekxmqAJ7hGE3BSkiX9A", imageUrls: [], prices: [{ platform: "Levi's", price: 2999, originalPrice: 3999, link: "#" }], description: "Iconic 501 fit with sustainable cotton denim.", sizes: ['28', '30', '32', '34']},
+{ id: 1, name: "Minimalist Leather Tote", brand: "Miraggio", category: "Bags", subcategory: "Totes", imageUrl: "https://m.media-amazon.com/images/I/811Pt0ZEo7L._AC_CR0%2C0%2C0%2C0_SX960_SY720_.jpg", imageUrls: ["https://m.media-amazon.com/images/I/61zyvYQ15+L._AC_CR0%2C0%2C0%2C0_SX960_SY720_.jpg"], prices: [{ platform: "Myntra", price: 3499, originalPrice: 4999, link: "#" }, { platform: "Ajio", price: 3550, originalPrice: 4999, link: "#" }, { platform: "Amazon", price: 3699, originalPrice: 4999, link: "#" }], description: "A structured, full-grain leather tote bag with subtle logo detailing.", sizes: ['OS']},
+{ id: 2, name: "Oversized Knit Jumper", brand: "Zara", category: "Apparel", subcategory: "Outerwear", imageUrl: "https://static.zara.net/assets/public/0941/448d/84b448f9a06b/9c099cfea55e/02756141081-p/02756141081-p.jpg?ts=1761149252010&w=1280", imageUrls: ["https://static.zara.net/assets/public/35d6/600c/d09e412b9ac7/2d49ff73f07f/02756141081-a1/02756141081-a1.jpg?ts=1761149254670&w=1500"], prices: [{ platform: "Zara", price: 1899, originalPrice: 2299, link: "#" }, { platform: "Myntra", price: 1950, originalPrice: 2299, link: "#" }, { platform: "Ajio", price: 1999, originalPrice: 2299, link: "#" }], description: "Heavy-gauge cotton knit sweater with oversized fit.", sizes: ['S', 'M', 'L', 'XL']},
+{ id: 3, name: "Running Shoes Pro 3.0", brand: "Puma", category: "Footwear", subcategory: "Sneakers", imageUrl: "https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_900,h_900/global/400986/31/mod01/fnd/PNA/fmt/png/Speedcat-OG-Women's-Sneakers", imageUrls: [], prices: [{ platform: "Puma", price: 4999, originalPrice: 6599, link: "#" }, { platform: "Amazon", price: 5199, originalPrice: 6599, link: "#" }, { platform: "Flipkart", price: 5299, originalPrice: 6599, link: "#" }], description: "High-performance running shoes with responsive cushioning.", sizes: ['UK 7', 'UK 8', 'UK 9']},
+{ id: 4, name: "Deep Navy Linen Shirt", brand: "H&M", category: "Apparel", subcategory: "Tops", imageUrl: "https://image.hm.com/assets/hm/9e/80/9e806c434b558d496d29e41d626044760d1c05f3.jpg?imwidth=1536", imageUrls: [], prices: [{ platform: "H&M", price: 1299, originalPrice: 1499, link: "#" }, { platform: "Myntra", price: 1349, originalPrice: 1499, link: "#" }, { platform: "Ajio", price: 1399, originalPrice: 1499, link: "#" }], description: "Lightweight 100% French linen shirt.", sizes: ['XS', 'S', 'M', 'L']},
+{ id: 5, name: "Skin Face Care Kit", brand: "Pilgrim", category: "Beauty", subcategory: "Skincare", imageUrl: "https://m.media-amazon.com/images/I/81PxrqBDucL._SX679_.jpg", imageUrls: [], prices: [{ platform: "Nykaa", price: 1199, originalPrice: 1500, link: "#" }, { platform: "Amazon", price: 1249, originalPrice: 1500, link: "#" }, { platform: "Purplle", price: 1299, originalPrice: 1500, link: "#" }], description: "Three best-selling facial serums for brightness and hydration.", sizes: ['OS']},
+{ id: 6, name: "Classic Denim Jeans", brand: "Levi's", category: "Apparel", subcategory: "Bottoms", imageUrl: "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQyqN4-GJZD3IDBzg68mL8uV3r6GdRbd34NiS5Jz4FKEuAihUT4dSLyFn21u1VjxBDtv3Upi_mTK-LkZ3sTNyJoekxmqAJ7hGE3BSkiX9A", imageUrls: [], prices: [{ platform: "Levi's", price: 2999, originalPrice: 3999, link: "#" }, { platform: "Myntra", price: 3099, originalPrice: 3999, link: "#" }, { platform: "Amazon", price: 3199, originalPrice: 3999, link: "#" }], description: "Iconic 501 fit with sustainable cotton denim.", sizes: ['28', '30', '32', '34']},
 ];
 
 window.trackedItems = window.mockProducts.slice(0, 2);
@@ -296,9 +480,12 @@ window.activeCharts = [];
 window.changeMainImage = (newSrc) => {
 const mainImage = document.getElementById('main-product-image');
 if (mainImage) {
+mainImage.style.opacity = '0';
+setTimeout(() => {
 mainImage.src = newSrc;
-// Smooth scroll to top of image
+mainImage.style.opacity = '1';
 mainImage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}, 150);
 }
 };
 
@@ -323,18 +510,18 @@ const modalContent = document.getElementById('filter-modal-content');
 modalContent.innerHTML = `
 <div class="space-y-6 pb-6">
 <div>
-<label class="block text-sm font-semibold text-gray-700 mb-2">Search Products</label>
+<label class="block text-sm font-bold text-gray-700 mb-3">Search Products</label>
 <input id="mobile-search" type="text" placeholder="Search items..." 
 value="${window.currentSearchQuery}"
-class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-accent text-base">
+class="w-full p-4 border-2 border-gray-200 rounded-2xl focus:ring-2 focus:ring-primary-accent focus:border-primary-accent text-base transition-all glass-card">
 </div>
 
 <div>
-<label class="block text-sm font-semibold text-gray-700 mb-2">Price Focus</label>
-<div class="grid grid-cols-3 gap-2">
+<label class="block text-sm font-bold text-gray-700 mb-3">Price Focus</label>
+<div class="grid grid-cols-3 gap-3">
 ${['Best Price', 'Highest Discount', 'Lowest Price'].map(opt => `
 <button onclick="window.currentFilters.priceRelevance = '${opt}'; renderFilterModal();"
-class="py-3 px-3 text-sm rounded-lg border transition active:scale-95 ${current.priceRelevance === opt ? 'bg-primary-accent text-white border-primary-accent' : 'bg-white text-gray-700 border-gray-300'}">
+class="py-3 px-3 text-sm font-semibold rounded-xl border-2 transition-all futuristic-btn ${current.priceRelevance === opt ? 'bg-gradient-to-br from-primary-accent to-stone-600 text-white border-primary-accent glow-accent' : 'glass-card text-gray-700 border-gray-200'}">
 ${opt.replace(' Price', '').replace(' Discount', ' Disc.')}
 </button>
 `).join('')}
@@ -342,11 +529,11 @@ ${opt.replace(' Price', '').replace(' Discount', ' Disc.')}
 </div>
 
 <div>
-<label class="block text-sm font-semibold text-gray-700 mb-2">Brand</label>
+<label class="block text-sm font-bold text-gray-700 mb-3">Brand</label>
 <div class="flex flex-wrap gap-2">
 ${brands.map(brand => `
 <button onclick="window.currentFilters.brand = window.currentFilters.brand === '${brand}' ? null : '${brand}'; renderFilterModal();"
-class="py-2 px-4 text-sm rounded-full border transition active:scale-95 ${current.brand === brand ? 'bg-primary-accent text-white border-primary-accent' : 'bg-white text-gray-700 border-gray-300'}">
+class="py-2.5 px-5 text-sm font-semibold rounded-full border-2 transition-all futuristic-btn ${current.brand === brand ? 'bg-gradient-to-br from-primary-accent to-stone-600 text-white border-primary-accent' : 'glass-card text-gray-700 border-gray-200'}">
 ${brand}
 </button>
 `).join('')}
@@ -354,24 +541,24 @@ ${brand}
 </div>
 
 <div>
-<label class="block text-sm font-semibold text-gray-700 mb-2">Category</label>
+<label class="block text-sm font-bold text-gray-700 mb-3">Category</label>
 <div class="flex flex-wrap gap-2">
 ${categories.map(cat => `
 <button onclick="window.currentCategoryFilter = window.currentCategoryFilter === '${cat}' ? null : '${cat}'; renderFilterModal();"
-class="py-2 px-4 text-sm rounded-full border transition active:scale-95 ${window.currentCategoryFilter === cat ? 'bg-primary-accent text-white border-primary-accent' : 'bg-white text-gray-700 border-gray-300'}">
+class="py-2.5 px-5 text-sm font-semibold rounded-full border-2 transition-all futuristic-btn ${window.currentCategoryFilter === cat ? 'bg-gradient-to-br from-primary-accent to-stone-600 text-white border-primary-accent' : 'glass-card text-gray-700 border-gray-200'}">
 ${cat}
 </button>
 `).join('')}
 </div>
 </div>
 
-<div class="flex gap-3 pt-4 border-t border-gray-200 sticky bottom-0 bg-white pb-safe">
+<div class="flex gap-3 pt-4 border-t-2 border-gray-200 sticky bottom-0 bg-white/95 backdrop-blur-xl pb-safe">
 <button onclick="window.clearAllFilters(); closeFilterModal();" 
-class="flex-1 py-3 text-sm font-semibold text-red-600 border-2 border-red-600 rounded-lg active:scale-95">
+class="flex-1 py-4 text-sm font-bold text-red-600 border-2 border-red-600 rounded-xl futuristic-btn hover:bg-red-50">
 Clear All
 </button>
 <button onclick="applyMobileFilters();" 
-class="flex-1 py-3 text-sm font-semibold text-white bg-primary-accent rounded-lg active:scale-95">
+class="flex-1 py-4 text-sm font-bold text-white bg-gradient-to-br from-primary-accent to-stone-600 rounded-xl futuristic-btn glow-accent">
 Apply Filters
 </button>
 </div>
@@ -416,6 +603,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 const isActive = btn.getAttribute('data-tab') === window.currentTab;
 btn.classList.toggle('text-primary-accent', isActive);
 btn.classList.toggle('text-gray-500', !isActive);
+btn.classList.toggle('active', isActive);
 });
 
 window.renderView(tab, searchQuery);
@@ -424,7 +612,14 @@ window.scrollTo({ top: 0, behavior: 'smooth' });
 
 // Main Render Function
 window.renderView = (view, searchQuery) => {
-if (view === 'logo') {
+if (!window.isLoggedIn && view !== 'auth') {
+renderAuthPage();
+return;
+}
+  
+if (view === 'auth') {
+renderAuthPage();
+} else if (view === 'logo') {
 renderLogoPage();
 } else if (view === 'product-detail') {
 const product = window.mockProducts.find(p => p.id === window.currentProductDetailId);
@@ -440,46 +635,175 @@ renderProfilePage();
 }
 };
 
+// Auth Page
+window.renderAuthPage = () => {
+const contentDiv = document.getElementById('content');
+document.querySelectorAll('.tab-btn').forEach(btn => {
+btn.style.display = 'none';
+});
+  
+contentDiv.innerHTML = `
+<div class="min-h-screen flex flex-col items-center justify-center px-4 -mt-16">
+<div class="text-center mb-8 stagger-animation">
+<h1 class="text-5xl font-extrabold text-primary-accent tracking-wider mb-3 holographic">Nex-In</h1>
+<p class="text-gray-600 text-lg">Your Smart Fashion Companion</p>
+</div>
+
+<div class="w-full max-w-md space-y-4 stagger-animation" style="animation-delay: 0.2s">
+<div class="glass-card rounded-3xl shadow-2xl p-8 glow-accent">
+<h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Welcome Back</h2>
+
+<form onsubmit="handleLogin(event)" class="space-y-4">
+<div>
+<label class="block text-sm font-bold text-gray-700 mb-2">Email</label>
+<input type="email" required placeholder="your@email.com"
+class="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-accent focus:border-primary-accent text-base transition-all glass-card">
+</div>
+<div>
+<label class="block text-sm font-bold text-gray-700 mb-2">Password</label>
+<input type="password" required placeholder="••••••••"
+class="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-accent focus:border-primary-accent text-base transition-all glass-card">
+</div>
+<button type="submit"
+class="w-full py-4 bg-gradient-to-r from-primary-accent to-stone-600 text-white font-bold rounded-xl shadow-xl futuristic-btn glow-accent text-base">
+Sign In
+</button>
+</form>
+
+<div class="mt-6 text-center">
+<p class="text-sm text-gray-600">Don't have an account? <button onclick="showSignup()" class="text-primary-accent font-bold">Sign Up</button></p>
+</div>
+</div>
+
+<div class="grid grid-cols-3 gap-4 mt-6 stagger-animation" style="animation-delay: 0.3s">
+<div class="glass-card rounded-xl p-4 text-center">
+<div class="text-2xl mb-1">🔍</div>
+<p class="text-xs font-semibold text-gray-700">Price Compare</p>
+</div>
+<div class="glass-card rounded-xl p-4 text-center">
+<div class="text-2xl mb-1">📊</div>
+<p class="text-xs font-semibold text-gray-700">Track Prices</p>
+</div>
+<div class="glass-card rounded-xl p-4 text-center">
+<div class="text-2xl mb-1">✨</div>
+<p class="text-xs font-semibold text-gray-700">AI Insights</p>
+</div>
+</div>
+</div>
+</div>
+`;
+};
+
+window.showSignup = () => {
+const contentDiv = document.getElementById('content');
+contentDiv.innerHTML = `
+<div class="min-h-screen flex flex-col items-center justify-center px-4 -mt-16">
+<div class="text-center mb-8 stagger-animation">
+<h1 class="text-5xl font-extrabold text-primary-accent tracking-wider mb-3 holographic">Nex-In</h1>
+<p class="text-gray-600 text-lg">Your Smart Fashion Companion</p>
+</div>
+
+<div class="w-full max-w-md space-y-4 stagger-animation" style="animation-delay: 0.2s">
+<div class="glass-card rounded-3xl shadow-2xl p-8 glow-accent">
+<h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Create Account</h2>
+
+<form onsubmit="handleSignup(event)" class="space-y-4">
+<div>
+<label class="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
+<input type="text" required placeholder="John Doe"
+class="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-accent focus:border-primary-accent text-base transition-all glass-card">
+</div>
+<div>
+<label class="block text-sm font-bold text-gray-700 mb-2">Email</label>
+<input type="email" required placeholder="your@email.com"
+class="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-accent focus:border-primary-accent text-base transition-all glass-card">
+</div>
+<div>
+<label class="block text-sm font-bold text-gray-700 mb-2">Password</label>
+<input type="password" required placeholder="••••••••"
+class="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-accent focus:border-primary-accent text-base transition-all glass-card">
+</div>
+<button type="submit"
+class="w-full py-4 bg-gradient-to-r from-primary-accent to-stone-600 text-white font-bold rounded-xl shadow-xl futuristic-btn glow-accent text-base">
+Create Account
+</button>
+</form>
+
+<div class="mt-6 text-center">
+<p class="text-sm text-gray-600">Already have an account? <button onclick="renderAuthPage()" class="text-primary-accent font-bold">Sign In</button></p>
+</div>
+</div>
+</div>
+</div>
+`;
+};
+
+window.handleLogin = (e) => {
+e.preventDefault();
+window.isLoggedIn = true;
+localStorage.setItem('nexin_logged_in', 'true');
+document.querySelectorAll('.tab-btn').forEach(btn => {
+btn.style.display = 'flex';
+});
+setActiveTab('logo');
+};
+
+window.handleSignup = (e) => {
+e.preventDefault();
+window.isLoggedIn = true;
+localStorage.setItem('nexin_logged_in', 'true');
+document.querySelectorAll('.tab-btn').forEach(btn => {
+btn.style.display = 'flex';
+});
+setActiveTab('logo');
+};
+
+window.handleSignout = () => {
+window.isLoggedIn = false;
+localStorage.removeItem('nexin_logged_in');
+setActiveTab('auth');
+};
+
 // Logo Page
 window.renderLogoPage = () => {
 const contentDiv = document.getElementById('content');
 contentDiv.innerHTML = `
 <div class="space-y-6 pb-6">
-<div class="bg-card-surface shadow-lg rounded-xl overflow-hidden">
+<div class="glass-card shadow-2xl rounded-3xl overflow-hidden float-animation glow-accent">
 <video autoplay muted loop playsinline class="w-full h-64 object-cover">
 <source src="https://diorama.dam-broadcast.com/pm_11872_1057_1057363-w0xxmcls1a-h265.mp4" type="video/mp4">
 </video>
-<div class="p-4">
+<div class="p-5">
 <h2 class="text-2xl font-bold text-primary-accent mb-2">Newest Arrivals</h2>
 <p class="text-sm text-gray-600">The future is neutral: core styles for every wardrobe</p>
 </div>
 </div>
 
 <div>
-<h3 class="text-xl font-bold text-gray-800 mb-3">Style Insights</h3>
+<h3 class="text-xl font-bold text-gray-800 mb-4">Style Insights</h3>
 <div class="space-y-3">
-<div class="bg-card-surface rounded-xl shadow-md p-3 flex gap-3 active:opacity-90">
+<div class="glass-card rounded-2xl shadow-lg p-4 flex gap-4 active:opacity-90 transition-all stagger-animation" style="animation-delay: 0.1s">
 <img src="https://img.freepik.com/premium-photo/coats-hanging-rack-clothing-store-coat-is-beige-there-are-several-different-colors-choose-from_197463-12344.jpg" 
-class="w-24 h-24 rounded-lg object-cover flex-shrink-0">
+class="w-24 h-24 rounded-xl object-cover flex-shrink-0 shadow-md">
 <div>
-<p class="font-semibold text-sm text-gray-800 mb-1">Trend: Quiet Luxury</p>
-<p class="text-xs text-gray-600">Focus on fabric quality and timeless silhouettes.</p>
+<p class="font-bold text-sm text-gray-800 mb-1">Trend: Quiet Luxury</p>
+<p class="text-xs text-gray-600 leading-relaxed">Focus on fabric quality and timeless silhouettes.</p>
 </div>
 </div>
 
-<div class="bg-card-surface rounded-xl shadow-md p-3 flex gap-3 active:opacity-90">
+<div class="glass-card rounded-2xl shadow-lg p-4 flex gap-4 active:opacity-90 transition-all stagger-animation" style="animation-delay: 0.2s">
 <img src="https://png.pngtree.com/thumb_back/fh260/background/20250601/pngtree-earth-tone-layers-in-rustic-artistic-composition-image_17372981.jpg" 
-class="w-24 h-24 rounded-lg object-cover flex-shrink-0">
+class="w-24 h-24 rounded-xl object-cover flex-shrink-0 shadow-md">
 <div>
-<p class="font-semibold text-sm text-gray-800 mb-1">Deep Earth Tones</p>
-<p class="text-xs text-gray-600">Rich browns and olives dominating this season.</p>
+<p class="font-bold text-sm text-gray-800 mb-1">Deep Earth Tones</p>
+<p class="text-xs text-gray-600 leading-relaxed">Rich browns and olives dominating this season.</p>
 </div>
 </div>
 </div>
 </div>
 
 <button onclick="setActiveTab('discover')" 
-class="w-full py-4 bg-primary-accent text-white font-semibold rounded-xl shadow-lg active:scale-98 transition-transform">
+class="w-full py-5 bg-gradient-to-r from-primary-accent to-stone-600 text-white font-bold rounded-2xl shadow-xl futuristic-btn glow-accent text-base">
 Discover & Explore
 </button>
 </div>
@@ -519,39 +843,41 @@ Math.min(...a.prices.map(p => p.price)) - Math.min(...b.prices.map(p => p.price)
 }
 
 contentDiv.innerHTML = `
-<div class="space-y-4 pb-6">
-<div>
+<div class="space-y-5 pb-6">
+<div class="glass-card rounded-2xl p-4 shadow-lg">
 <h2 class="text-2xl font-bold text-gray-900 mb-1">
 ${searchQuery ? `"${searchQuery}"` : 'Discover'}
 </h2>
 <p class="text-sm text-gray-600">${filteredProducts.length} products • ${priceRelevance}</p>
 </div>
 
-<div class="grid grid-cols-2 gap-3">
-${filteredProducts.map(product => {
+<div class="grid grid-cols-2 gap-4">
+${filteredProducts.map((product, idx) => {
 const minPrice = Math.min(...product.prices.map(p => p.price));
 const originalPrice = product.prices[0].originalPrice;
 const discount = Math.round(((originalPrice - minPrice) / originalPrice) * 100);
 
 return `
-<div class="product-card bg-card-surface rounded-xl shadow-md overflow-hidden active:opacity-90 transition-opacity"
+<div class="product-card glass-card rounded-2xl shadow-lg overflow-hidden stagger-animation" style="animation-delay: ${idx * 0.1}s"
 onclick="window.currentProductDetailId = ${product.id}; setActiveTab('product-detail');">
 <div class="relative">
-<img src="${product.imageUrl}" alt="${product.name}" class="w-full h-48 object-cover">
-${discount > 0 ? `<div class="absolute top-2 right-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">-${discount}%</div>` : ''}
+<img src="${product.imageUrl}" alt="${product.name}" class="w-full h-52 object-cover">
+${discount > 0 ? `<div class="discount-badge absolute top-3 right-3 text-white text-xs font-bold px-3 py-1.5 rounded-full">-${discount}%</div>` : ''}
 </div>
-<div class="p-3">
-<p class="text-xs text-gray-500 truncate">${product.brand}</p>
-<h3 class="text-sm font-semibold text-gray-900 truncate">${product.name}</h3>
-<p class="mt-1 text-lg font-bold text-primary-accent">₹${minPrice.toLocaleString('en-IN')}</p>
+<div class="p-4">
+<p class="text-xs text-gray-500 font-semibold truncate uppercase tracking-wide">${product.brand}</p>
+<h3 class="text-sm font-bold text-gray-900 truncate mt-1">${product.name}</h3>
+<div class="mt-2">
+<p class="text-xl font-bold text-primary-accent">₹${minPrice.toLocaleString('en-IN')}</p>
 ${discount > 0 ? `<p class="text-xs text-gray-500 line-through">₹${originalPrice.toLocaleString('en-IN')}</p>` : ''}
+</div>
 </div>
 </div>
 `;
 }).join('')}
 </div>
 
-${filteredProducts.length === 0 ? '<div class="text-center py-16 text-gray-500">No products found. Try different filters.</div>' : ''}
+${filteredProducts.length === 0 ? '<div class="glass-card rounded-2xl text-center py-20 shadow-lg"><p class="text-gray-600 font-medium">No products found. Try different filters.</p></div>' : ''}
 </div>
 `;
 };
@@ -563,96 +889,96 @@ const minPrice = Math.min(...product.prices.map(p => p.price));
 const discount = Math.round(((product.prices[0].originalPrice - minPrice) / product.prices[0].originalPrice) * 100);
 
 contentDiv.innerHTML = `
-<div class="space-y-4 pb-6">
+<div class="space-y-5 pb-6">
 <button onclick="setActiveTab(window.lastActiveTab)"
-class="flex items-center text-primary-accent font-medium mb-2 active:opacity-70">
-<svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+class="flex items-center text-primary-accent font-bold mb-2 active:opacity-70 transition-all">
+<svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+<path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
 </svg>
 Back
 </button>
 
-<div class="bg-card-surface rounded-xl shadow-lg overflow-hidden">
+<div class="glass-card rounded-3xl shadow-2xl overflow-hidden glow-accent">
 <div class="relative">
-<img id="main-product-image" src="${product.imageUrl}" alt="${product.name}" class="w-full h-80 object-cover">
-${discount > 0 ? `<div class="absolute top-3 right-3 bg-red-600 text-white text-sm font-bold px-3 py-2 rounded-full shadow-lg">-${discount}%</div>` : ''}
+<img id="main-product-image" src="${product.imageUrl}" alt="${product.name}" class="w-full h-96 object-cover transition-opacity duration-300">
+${discount > 0 ? `<div class="discount-badge absolute top-4 right-4 text-white text-sm font-bold px-4 py-2 rounded-full shadow-xl">-${discount}%</div>` : ''}
 </div>
 ${product.imageUrls.length > 0 ? `
-<div class="flex gap-2 p-3 overflow-x-auto">
+<div class="flex gap-3 p-4 overflow-x-auto scroll-smooth">
 ${[product.imageUrl, ...product.imageUrls].map(url => `
-<img src="${url}" class="thumbnail-img w-16 h-16 object-cover rounded-lg border-2 border-gray-200 cursor-pointer active:border-primary-accent flex-shrink-0" 
+<img src="${url}" class="thumbnail-img w-20 h-20 object-cover rounded-xl border-2 border-gray-200 cursor-pointer flex-shrink-0 shadow-md" 
 onclick="changeMainImage('${url}')">
 `).join('')}
 </div>
 ` : ''}
 </div>
 
-<div class="bg-card-surface rounded-xl shadow-lg p-4">
-<h1 class="text-2xl font-bold text-gray-900 mb-1">${product.name}</h1>
-<p class="text-lg text-primary-accent font-semibold mb-4">${product.brand}</p>
+<div class="glass-card rounded-3xl shadow-2xl p-5">
+<h1 class="text-3xl font-bold text-gray-900 mb-2">${product.name}</h1>
+<p class="text-lg text-primary-accent font-bold mb-5">${product.brand}</p>
 
-<div class="bg-light-bg rounded-lg p-4 mb-4">
+<div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-5 mb-5 border border-green-200">
 <h3 class="text-sm font-bold text-gray-800 mb-3 flex items-center">
-<svg class="w-4 h-4 mr-1 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+<svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+<path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
 </svg>
 Best Price: ₹${minPrice.toLocaleString('en-IN')}
 </h3>
-<div class="space-y-2">
+<div class="space-y-3">
 ${product.prices.map(p => `
-<div class="flex justify-between items-center text-sm">
-<span class="font-medium text-gray-700">${p.platform}</span>
-<div class="flex items-center gap-2">
+<div class="flex justify-between items-center text-sm bg-white rounded-xl p-3 shadow-sm">
+<span class="font-bold text-gray-700">${p.platform}</span>
+<div class="flex items-center gap-3">
 <span class="text-xs text-gray-500 line-through">₹${p.originalPrice.toLocaleString('en-IN')}</span>
-<span class="font-bold text-red-600">₹${p.price.toLocaleString('en-IN')}</span>
-<a href="${p.link}" class="text-xs bg-primary-accent text-white px-3 py-1 rounded-full active:opacity-80">Shop</a>
+<span class="font-bold text-red-600 text-base">₹${p.price.toLocaleString('en-IN')}</span>
+<a href="${p.link}" class="text-xs bg-gradient-to-r from-primary-accent to-stone-600 text-white px-4 py-2 rounded-full active:opacity-80 font-semibold futuristic-btn">Shop</a>
 </div>
 </div>
 `).join('')}
 </div>
 </div>
 
-<div class="mb-4">
-<p class="font-semibold text-gray-800 mb-2 text-sm">Available Sizes</p>
+<div class="mb-5">
+<p class="font-bold text-gray-800 mb-3 text-sm">Available Sizes</p>
 <div class="flex flex-wrap gap-2">
 ${product.sizes.map(size => `
-<button class="size-button py-2 px-4 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 active:bg-gray-100">
+<button class="size-button py-3 px-5 border-2 border-gray-300 rounded-xl text-sm font-bold text-gray-700 glass-card">
 ${size}
 </button>
 `).join('')}
 </div>
 </div>
 
-<div class="mb-4">
-<p class="font-semibold text-gray-800 mb-2 text-sm">Product Details</p>
-<p class="text-sm text-gray-700 leading-relaxed">${product.description}</p>
+<div class="mb-5">
+<p class="font-bold text-gray-800 mb-3 text-sm">Product Details</p>
+<p class="text-sm text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-xl">${product.description}</p>
 </div>
 
-<div class="bg-gradient-to-br from-purple-50 to-white rounded-lg p-4 border border-purple-200">
-<h3 class="text-base font-bold text-premium-purple mb-2 flex items-center">
-<svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+<div class="bg-gradient-to-br from-purple-50 to-violet-50 rounded-2xl p-5 border-2 border-purple-200 glow-premium">
+<h3 class="text-base font-bold text-premium-purple mb-3 flex items-center">
+<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+<path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
 </svg>
 AI Price Insight
 </h3>
 <p class="text-sm text-gray-700 leading-relaxed">
 ${window.isPremium() ? 
 'The price is currently 5% above its 6-month low. The trend has been stable. <strong>Recommendation: BUY NOW.</strong> Further drops unlikely.' :
-'<span class="text-premium-purple font-semibold">Upgrade to Premium</span> to unlock AI-powered price predictions and styling recommendations.'}
+'<span class="text-premium-purple font-bold">Upgrade to Premium</span> to unlock AI-powered price predictions and styling recommendations.'}
 </p>
 ${!window.isPremium() ? `
-<button onclick="setActiveTab('profile')" class="w-full mt-3 py-3 bg-premium-purple text-white text-sm font-semibold rounded-lg active:scale-98 transition-transform">
+<button onclick="setActiveTab('profile')" class="w-full mt-4 py-4 bg-gradient-to-r from-premium-purple to-violet-600 text-white text-sm font-bold rounded-xl futuristic-btn glow-premium">
 Upgrade to Premium
 </button>
 ` : ''}
 </div>
 </div>
 
-<div class="flex gap-3">
-<button onclick="alert('Added to tracker')" class="flex-1 py-4 bg-primary-accent text-white font-semibold rounded-xl active:scale-98 transition-transform">
+<div class="flex gap-4">
+<button onclick="alert('Added to tracker')" class="flex-1 py-5 bg-gradient-to-r from-primary-accent to-stone-600 text-white font-bold rounded-2xl futuristic-btn glow-accent shadow-xl">
 Track Price
 </button>
-<button onclick="alert('Saved to wardrobe')" class="flex-1 py-4 border-2 border-primary-accent text-primary-accent font-semibold rounded-xl active:scale-98 transition-transform">
+<button onclick="alert('Saved to wardrobe')" class="flex-1 py-5 border-2 border-primary-accent text-primary-accent font-bold rounded-2xl futuristic-btn glass-card shadow-xl">
 Save Item
 </button>
 </div>
@@ -664,24 +990,24 @@ Save Item
 window.renderTrackerContent = () => {
 const contentDiv = document.getElementById('content');
 contentDiv.innerHTML = `
-<div class="space-y-4 pb-6">
-<div>
+<div class="space-y-5 pb-6">
+<div class="glass-card rounded-2xl p-4 shadow-lg">
 <h2 class="text-2xl font-bold text-gray-900 mb-1">Price Tracker</h2>
 <p class="text-sm text-gray-600">${window.trackedItems.length} items tracked</p>
 </div>
 
-<div class="space-y-3">
-${window.trackedItems.map(p => {
+<div class="space-y-4">
+${window.trackedItems.map((p, idx) => {
 const minPrice = Math.min(...p.prices.map(price => price.price));
 return `
-<div class="bg-card-surface rounded-xl shadow-md p-4 flex gap-3 active:opacity-90 transition-opacity"
+<div class="glass-card rounded-2xl shadow-lg p-4 flex gap-4 active:opacity-90 transition-all stagger-animation" style="animation-delay: ${idx * 0.1}s"
 onclick="window.currentProductDetailId = ${p.id}; setActiveTab('product-detail');">
-<img src="${p.imageUrl}" alt="${p.name}" class="w-20 h-20 object-cover rounded-lg flex-shrink-0">
+<img src="${p.imageUrl}" alt="${p.name}" class="w-24 h-24 object-cover rounded-xl flex-shrink-0 shadow-md">
 <div class="flex-1 min-w-0">
-<h3 class="text-base font-semibold text-gray-900 truncate">${p.name}</h3>
-<p class="text-sm text-gray-500 truncate">${p.brand}</p>
-<div class="mt-2 flex items-baseline gap-2">
-<p class="text-lg font-bold text-green-600">₹${minPrice.toLocaleString('en-IN')}</p>
+<h3 class="text-base font-bold text-gray-900 truncate">${p.name}</h3>
+<p class="text-sm text-gray-500 truncate font-semibold">${p.brand}</p>
+<div class="mt-3 flex items-baseline gap-2">
+<p class="text-xl font-bold text-green-600">₹${minPrice.toLocaleString('en-IN')}</p>
 <p class="text-xs text-gray-500 line-through">₹${p.prices[0].originalPrice.toLocaleString('en-IN')}</p>
 </div>
 </div>
@@ -689,27 +1015,27 @@ onclick="window.currentProductDetailId = ${p.id}; setActiveTab('product-detail')
 `;
 }).join('')}
 ${window.trackedItems.length === 0 ? `
-<div class="text-center py-16 bg-card-surface rounded-xl shadow-md">
-<svg class="w-16 h-16 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+<div class="text-center py-20 glass-card rounded-2xl shadow-lg">
+<svg class="w-20 h-20 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+<path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
 </svg>
-<p class="text-gray-600 mb-2 font-medium">No items tracked yet</p>
+<p class="text-gray-700 mb-2 font-bold text-lg">No items tracked yet</p>
 <p class="text-sm text-gray-500 px-8">Start tracking from the Discover page to get price drop alerts</p>
 </div>
 ` : ''}
 </div>
 
 ${window.trackedItems.length > 0 ? `
-<div class="bg-light-bg rounded-xl p-4">
-<h3 class="font-semibold text-gray-800 mb-3">Tracking Stats</h3>
-<div class="grid grid-cols-2 gap-3">
-<div class="bg-white rounded-lg p-4 shadow-sm">
-<p class="text-xs text-gray-600 mb-1">Avg. Discount</p>
-<p class="text-2xl font-bold text-green-600">15%</p>
+<div class="glass-card rounded-2xl p-5 shadow-lg glow-accent">
+<h3 class="font-bold text-gray-800 mb-4 text-lg">Tracking Stats</h3>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-5 shadow-md border border-green-200">
+<p class="text-xs text-gray-600 mb-2 font-semibold uppercase tracking-wide">Avg. Discount</p>
+<p class="text-3xl font-bold text-green-600">15%</p>
 </div>
-<div class="bg-white rounded-lg p-4 shadow-sm">
-<p class="text-xs text-gray-600 mb-1">Total Savings</p>
-<p class="text-2xl font-bold text-primary-accent">₹2,450</p>
+<div class="bg-gradient-to-br from-stone-50 to-gray-50 rounded-xl p-5 shadow-md border border-stone-200">
+<p class="text-xs text-gray-600 mb-2 font-semibold uppercase tracking-wide">Total Savings</p>
+<p class="text-3xl font-bold text-primary-accent">₹2,450</p>
 </div>
 </div>
 </div>
@@ -722,47 +1048,47 @@ ${window.trackedItems.length > 0 ? `
 window.renderWardrobeContent = () => {
 const contentDiv = document.getElementById('content');
 contentDiv.innerHTML = `
-<div class="space-y-4 pb-6">
-<div>
+<div class="space-y-5 pb-6">
+<div class="glass-card rounded-2xl p-4 shadow-lg">
 <h2 class="text-2xl font-bold text-gray-900 mb-1">My Wardrobe</h2>
 <p class="text-sm text-gray-600">${window.savedItems.length} saved items</p>
 </div>
 
-<div class="grid grid-cols-2 gap-3">
-${window.savedItems.map(p => `
-<div class="bg-card-surface rounded-xl shadow-md overflow-hidden active:opacity-90 transition-opacity"
+<div class="grid grid-cols-2 gap-4">
+${window.savedItems.map((p, idx) => `
+<div class="glass-card rounded-2xl shadow-lg overflow-hidden active:opacity-90 transition-all stagger-animation" style="animation-delay: ${idx * 0.1}s"
 onclick="window.currentProductDetailId = ${p.id}; setActiveTab('product-detail');">
-<img src="${p.imageUrl}" alt="${p.name}" class="w-full h-40 object-cover">
-<div class="p-3">
-<h3 class="text-sm font-semibold text-gray-900 truncate">${p.name}</h3>
-<p class="text-xs text-gray-500 truncate">${p.brand}</p>
-<p class="text-xs text-gray-400 mt-1">${p.category}</p>
+<img src="${p.imageUrl}" alt="${p.name}" class="w-full h-44 object-cover">
+<div class="p-4">
+<h3 class="text-sm font-bold text-gray-900 truncate">${p.name}</h3>
+<p class="text-xs text-gray-500 truncate font-semibold mt-1">${p.brand}</p>
+<p class="text-xs text-gray-400 mt-2 uppercase tracking-wide font-semibold">${p.category}</p>
 </div>
 </div>
 `).join('')}
 </div>
 
 ${window.savedItems.length === 0 ? `
-<div class="text-center py-16 bg-card-surface rounded-xl shadow-md">
-<svg class="w-16 h-16 mx-auto text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+<div class="text-center py-20 glass-card rounded-2xl shadow-lg">
+<svg class="w-20 h-20 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+<path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
 </svg>
-<p class="text-gray-600 mb-2 font-medium">Your wardrobe is empty</p>
+<p class="text-gray-700 mb-2 font-bold text-lg">Your wardrobe is empty</p>
 <p class="text-sm text-gray-500 px-8">Save items from Discover to build your collection</p>
 </div>
 ` : ''}
 
 ${window.savedItems.length > 0 ? `
-<div class="bg-gradient-to-br from-purple-50 to-white rounded-xl p-4 border border-purple-200">
-<h3 class="font-semibold text-premium-purple mb-2 flex items-center">
-<svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m4-2H2m18-10h-4M3 13h2"></path>
+<div class="bg-gradient-to-br from-purple-50 to-violet-50 rounded-2xl p-5 border-2 border-purple-200 shadow-lg glow-premium">
+<h3 class="font-bold text-premium-purple mb-3 flex items-center text-base">
+<svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+<path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m4-2H2m18-10h-4M3 13h2"></path>
 </svg>
 AI Outfit Generator
 </h3>
-<p class="text-sm text-gray-700 mb-3">Get personalized outfit combinations from your saved items using AI.</p>
+<p class="text-sm text-gray-700 mb-4 leading-relaxed">Get personalized outfit combinations from your saved items using AI.</p>
 <button onclick="alert('Premium Feature: AI Outfit Generator')" 
-class="w-full py-3 bg-premium-purple text-white font-semibold rounded-lg text-sm active:scale-98 transition-transform">
+class="w-full py-4 bg-gradient-to-r from-premium-purple to-violet-600 text-white font-bold rounded-xl text-sm futuristic-btn glow-premium">
 Generate Outfit (Premium)
 </button>
 </div>
@@ -779,59 +1105,62 @@ const premiumFeatures = ['AI Price Prediction', 'AI Stylist', 'Unlimited Trackin
 const freeFeatures = ['Price Aggregation', 'Basic Filtering', 'Product Discovery'];
 
 contentDiv.innerHTML = `
-<div class="space-y-4 pb-6">
-<h2 class="text-2xl font-bold text-gray-900 mb-4">Account</h2>
+<div class="space-y-5 pb-6">
+<h2 class="text-3xl font-bold text-gray-900 mb-4">Account</h2>
 
-<div class="bg-card-surface rounded-xl shadow-lg p-4">
-<h3 class="text-lg font-bold text-gray-800 mb-3 pb-2 border-b border-gray-200">Profile Info</h3>
-<div class="space-y-2 text-sm">
-<div class="flex justify-between">
-<span class="text-gray-600">Name:</span>
-<span class="font-medium">Ellie Johnson</span>
+<div class="glass-card rounded-2xl shadow-lg p-5">
+<h3 class="text-lg font-bold text-gray-800 mb-4 pb-3 border-b-2 border-gray-200">Profile Info</h3>
+<div class="space-y-3 text-sm">
+<div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl">
+<span class="text-gray-600 font-semibold">Name:</span>
+<span class="font-bold text-gray-900">Ellie Johnson</span>
 </div>
-<div class="flex justify-between items-center">
-<span class="text-gray-600">Email:</span>
-<span class="font-medium text-xs">ellie.johnson@example.com</span>
+<div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl">
+<span class="text-gray-600 font-semibold">Email:</span>
+<span class="font-bold text-gray-900 text-xs">ellie.johnson@example.com</span>
 </div>
-<div class="flex justify-between">
-<span class="text-gray-600">Mobile:</span>
-<span class="font-medium">+1 (555) 123-4567</span>
+<div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl">
+<span class="text-gray-600 font-semibold">Mobile:</span>
+<span class="font-bold text-gray-900">+1 (555) 123-4567</span>
 </div>
 </div>
-<button onclick="alert('Edit profile')" class="mt-3 text-sm text-primary-accent font-medium active:opacity-70">
-Edit Profile →
+<button onclick="alert('Edit profile')" class="mt-4 text-sm text-primary-accent font-bold active:opacity-70 flex items-center">
+Edit Profile
+<svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path>
+</svg>
 </button>
 </div>
 
-<div class="${isPremium ? 'bg-gradient-to-br from-purple-50 to-white border-2 border-purple-200' : 'bg-card-surface border border-gray-300'} rounded-xl shadow-lg p-4">
-<div class="flex justify-between items-center mb-3">
-<h3 class="text-xl font-bold ${isPremium ? 'text-premium-purple' : 'text-primary-accent'}">
+<div class="${isPremium ? 'bg-gradient-to-br from-purple-50 to-violet-50 border-2 border-purple-300 glow-premium' : 'glass-card border-2 border-gray-300'} rounded-2xl shadow-2xl p-5">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-2xl font-bold ${isPremium ? 'text-premium-purple' : 'text-primary-accent'}">
 Nex-In ${window.subscriptionTier}
 </h3>
-<span class="text-xs font-semibold px-2 py-1 rounded-full ${isPremium ? 'bg-premium-purple text-white' : 'bg-gray-200 text-gray-700'}">
+<span class="text-xs font-bold px-3 py-1.5 rounded-full ${isPremium ? 'bg-gradient-to-r from-premium-purple to-violet-600 text-white shadow-lg' : 'bg-gray-200 text-gray-700'}">
 ${isPremium ? 'Active' : 'Current'}
 </span>
 </div>
 
-<div class="grid grid-cols-2 gap-3 mb-4">
+<div class="grid grid-cols-2 gap-4 mb-5">
 <div>
-<h4 class="text-xs font-semibold mb-2 ${isPremium ? 'text-premium-purple' : 'text-primary-accent'}">Included:</h4>
-<ul class="text-xs space-y-1">
+<h4 class="text-xs font-bold mb-3 ${isPremium ? 'text-premium-purple' : 'text-primary-accent'} uppercase tracking-wide">Included:</h4>
+<ul class="text-xs space-y-2">
 ${(isPremium ? premiumFeatures : freeFeatures).map(f => `
 <li class="flex items-start">
-<span class="${isPremium ? 'text-premium-purple' : 'text-primary-accent'} mr-1">✓</span>
-<span>${f}</span>
+<span class="${isPremium ? 'text-premium-purple' : 'text-primary-accent'} mr-2 font-bold text-base">✓</span>
+<span class="font-semibold">${f}</span>
 </li>
 `).join('')}
 </ul>
 </div>
 <div>
-<h4 class="text-xs font-semibold mb-2 text-red-500">Excluded:</h4>
-<ul class="text-xs space-y-1 text-gray-500">
+<h4 class="text-xs font-bold mb-3 text-red-500 uppercase tracking-wide">Excluded:</h4>
+<ul class="text-xs space-y-2 text-gray-500">
 ${(!isPremium ? premiumFeatures : freeFeatures).map(f => `
 <li class="flex items-start">
-<span class="text-red-500 mr-1">✗</span>
-<span>${f}</span>
+<span class="text-red-500 mr-2 font-bold text-base">✗</span>
+<span class="font-semibold">${f}</span>
 </li>
 `).join('')}
 </ul>
@@ -840,28 +1169,28 @@ ${(!isPremium ? premiumFeatures : freeFeatures).map(f => `
 
 ${!isPremium ? `
 <button onclick="window.subscriptionTier = 'Premium'; renderView('profile');" 
-class="w-full py-4 bg-premium-purple text-white font-bold rounded-xl text-sm active:scale-98 transition-transform">
+class="w-full py-5 bg-gradient-to-r from-premium-purple to-violet-600 text-white font-bold rounded-xl text-base futuristic-btn glow-premium shadow-xl">
 Upgrade to Premium - ₹199/mo
 </button>
 ` : `
-<p class="text-center text-sm text-gray-600">Thanks for being a Premium member! 🎉</p>
+<p class="text-center text-sm text-gray-700 font-semibold bg-white/50 py-3 rounded-xl">Thanks for being a Premium member! 🎉</p>
 `}
 </div>
 
 <div class="space-y-3">
-<h3 class="text-lg font-bold text-gray-800">Settings</h3>
-<button class="w-full flex justify-between items-center py-4 px-4 bg-card-surface rounded-xl border border-gray-200 active:bg-gray-50">
-<span class="text-sm text-gray-700">Price Drop Notifications</span>
-<span class="text-sm font-medium text-primary-accent">ON</span>
+<h3 class="text-xl font-bold text-gray-800">Settings</h3>
+<button class="w-full flex justify-between items-center py-4 px-5 glass-card rounded-2xl border-2 border-gray-200 active:bg-gray-50 shadow-md transition-all">
+<span class="text-sm text-gray-700 font-semibold">Price Drop Notifications</span>
+<span class="text-sm font-bold text-primary-accent bg-green-100 px-3 py-1 rounded-full">ON</span>
 </button>
-<button class="w-full flex justify-between items-center py-4 px-4 bg-card-surface rounded-xl border border-gray-200 active:bg-gray-50">
-<span class="text-sm text-gray-700">Dark Mode</span>
-<span class="text-sm font-medium text-gray-500">OFF</span>
+<button class="w-full flex justify-between items-center py-4 px-5 glass-card rounded-2xl border-2 border-gray-200 active:bg-gray-50 shadow-md transition-all">
+<span class="text-sm text-gray-700 font-semibold">Dark Mode</span>
+<span class="text-sm font-bold text-gray-500 bg-gray-100 px-3 py-1 rounded-full">OFF</span>
 </button>
 </div>
 
-<button onclick="alert('Signed out')" 
-class="w-full py-4 bg-gray-100 text-gray-600 font-semibold rounded-xl text-sm active:bg-gray-200">
+<button onclick="handleSignout()" 
+class="w-full py-5 bg-gradient-to-r from-red-500 to-red-600 text-white font-bold rounded-2xl text-sm active:opacity-90 transition-all shadow-xl futuristic-btn">
 Sign Out
 </button>
 </div>
@@ -870,7 +1199,11 @@ Sign Out
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+if (!window.isLoggedIn) {
+setActiveTab('auth');
+} else {
 setActiveTab('logo');
+}
 });
 </script>
 </body>
