@@ -938,6 +938,17 @@ ${product.prices.map(p => `
 </div>
 </div>
 
+<!-- Historical Price Chart -->
+<div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-5 mb-5 border border-blue-200">
+<h3 class="text-sm font-bold text-gray-800 mb-3 flex items-center">
+<svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+<path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+</svg>
+Price History (Last 6 Months)
+</h3>
+<canvas id="priceChart-${product.id}" class="w-full" style="max-height: 200px;"></canvas>
+</div>
+
 <div class="mb-5">
 <p class="font-bold text-gray-800 mb-3 text-sm">Available Sizes</p>
 <div class="flex flex-wrap gap-2">
@@ -954,7 +965,8 @@ ${size}
 <p class="text-sm text-gray-700 leading-relaxed bg-gray-50 p-4 rounded-xl">${product.description}</p>
 </div>
 
-<div class="bg-gradient-to-br from-purple-50 to-violet-50 rounded-2xl p-5 border-2 border-purple-200 glow-premium">
+<!-- AI Price Insight -->
+<div class="bg-gradient-to-br from-purple-50 to-violet-50 rounded-2xl p-5 mb-5 border-2 border-purple-200 glow-premium">
 <h3 class="text-base font-bold text-premium-purple mb-3 flex items-center">
 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
 <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
@@ -964,13 +976,51 @@ AI Price Insight
 <p class="text-sm text-gray-700 leading-relaxed">
 ${window.isPremium() ? 
 'The price is currently 5% above its 6-month low. The trend has been stable. <strong>Recommendation: BUY NOW.</strong> Further drops unlikely.' :
-'<span class="text-premium-purple font-bold">Upgrade to Premium</span> to unlock AI-powered price predictions and styling recommendations.'}
+'<span class="text-premium-purple font-bold">Upgrade to Premium</span> to unlock AI-powered price predictions and purchase recommendations.'}
 </p>
 ${!window.isPremium() ? `
 <button onclick="setActiveTab('profile')" class="w-full mt-4 py-4 bg-gradient-to-r from-premium-purple to-violet-600 text-white text-sm font-bold rounded-xl futuristic-btn glow-premium">
 Upgrade to Premium
 </button>
 ` : ''}
+</div>
+
+<!-- AI Stylist & Virtual Try-On -->
+<div class="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl p-5 mb-5 border-2 border-amber-200">
+<h3 class="text-base font-bold text-orange-600 mb-3 flex items-center">
+<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+<path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+</svg>
+AI Stylist & Virtual Try-On
+</h3>
+${window.isPremium() ? `
+<div class="space-y-3">
+<div class="bg-white rounded-xl p-4 shadow-sm">
+<p class="text-sm font-bold text-gray-800 mb-2">🎨 Style Suggestions</p>
+<p class="text-xs text-gray-600">This ${product.name.toLowerCase()} pairs perfectly with neutral tones. Try combining with beige trousers or a cream blazer for a sophisticated look.</p>
+</div>
+<button onclick="alert('Opening Virtual Try-On...')" class="w-full py-3 bg-gradient-to-r from-orange-500 to-amber-600 text-white font-bold rounded-xl futuristic-btn shadow-lg">
+Try On Virtually
+</button>
+</div>
+` : `
+<p class="text-sm text-gray-700 leading-relaxed mb-3">
+Get personalized styling advice and see how items look on you with our AI-powered virtual try-on feature.
+</p>
+<div class="grid grid-cols-2 gap-3 mb-4">
+<div class="bg-white rounded-lg p-3 shadow-sm">
+<p class="text-xs font-semibold text-gray-800">✨ AI Styling</p>
+<p class="text-xs text-gray-500 mt-1">Outfit suggestions</p>
+</div>
+<div class="bg-white rounded-lg p-3 shadow-sm">
+<p class="text-xs font-semibold text-gray-800">👗 Virtual Try-On</p>
+<p class="text-xs text-gray-500 mt-1">See before you buy</p>
+</div>
+</div>
+<button onclick="setActiveTab('profile')" class="w-full py-4 bg-gradient-to-r from-premium-purple to-violet-600 text-white text-sm font-bold rounded-xl futuristic-btn glow-premium">
+Unlock Premium Features
+</button>
+`}
 </div>
 </div>
 
@@ -984,6 +1034,102 @@ Save Item
 </div>
 </div>
 `;
+
+// Generate price history chart
+setTimeout(() => {
+generatePriceChart(product);
+}, 100);
+};
+
+// Generate Price History Chart
+window.generatePriceChart = (product) => {
+const canvas = document.getElementById(`priceChart-${product.id}`);
+if (!canvas) return;
+
+const ctx = canvas.getContext('2d');
+const minPrice = Math.min(...product.prices.map(p => p.price));
+const maxPrice = product.prices[0].originalPrice;
+
+// Generate 6 months of historical data
+const labels = ['6mo ago', '5mo ago', '4mo ago', '3mo ago', '2mo ago', '1mo ago', 'Now'];
+const priceData = [
+maxPrice,
+maxPrice * 0.95,
+maxPrice * 0.92,
+minPrice * 1.08,
+minPrice * 1.05,
+minPrice * 1.02,
+minPrice
+];
+
+const chart = new Chart(ctx, {
+type: 'line',
+data: {
+labels: labels,
+datasets: [{
+label: 'Price',
+data: priceData,
+borderColor: '#78716C',
+backgroundColor: 'rgba(120, 113, 108, 0.1)',
+borderWidth: 3,
+tension: 0.4,
+fill: true,
+pointBackgroundColor: '#78716C',
+pointBorderColor: '#fff',
+pointBorderWidth: 2,
+pointRadius: 5,
+pointHoverRadius: 7
+}]
+},
+options: {
+responsive: true,
+maintainAspectRatio: true,
+plugins: {
+legend: {
+display: false
+},
+tooltip: {
+backgroundColor: 'rgba(0, 0, 0, 0.8)',
+padding: 12,
+borderRadius: 8,
+displayColors: false,
+callbacks: {
+label: function(context) {
+return '₹' + context.parsed.y.toLocaleString('en-IN');
+}
+}
+}
+},
+scales: {
+y: {
+beginAtZero: false,
+ticks: {
+callback: function(value) {
+return '₹' + value.toLocaleString('en-IN', { maximumFractionDigits: 0 });
+},
+font: {
+size: 10
+}
+},
+grid: {
+color: 'rgba(0, 0, 0, 0.05)'
+}
+},
+x: {
+ticks: {
+font: {
+size: 10
+}
+},
+grid: {
+display: false
+}
+}
+}
+}
+});
+
+window.activeCharts.push(chart);
 };
 
 // Tracker Content
