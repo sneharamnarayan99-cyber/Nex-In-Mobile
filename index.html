@@ -350,18 +350,80 @@ colors: {
 <body class="bg-light-bg text-gray-900">
 
 <!-- Mobile Header -->
-<header class="mobile-header glass-header shadow-lg">
+<header id="app-header" class="mobile-header glass-header shadow-lg" style="display: none;">
 <div class="py-4 px-5">
 <div class="flex justify-between items-center">
 <button onclick="setActiveTab('logo')" class="focus:outline-none active:opacity-70 transition-all">
 <h1 class="text-2xl font-extrabold text-primary-accent tracking-wider holographic">Nex-In</h1>
 </button>
-<button class="p-2 text-gray-600 active:opacity-70 transition-all hover:text-primary-accent" onclick="alert('Notifications')">
-<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+<div class="relative">
+<button class="p-2 text-gray-600 active:opacity-70 transition-all hover:text-primary-accent" onclick="toggleNotifications()">
+<svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
 <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
 </svg>
+<span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
 </button>
+<!-- Notifications Dropdown -->
+<div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 glass-card rounded-2xl shadow-2xl z-50 max-h-96 overflow-y-auto">
+<div class="p-4 border-b border-gray-200">
+<h3 class="text-base font-bold text-gray-800">Notifications</h3>
+</div>
+<div class="divide-y divide-gray-100">
+<div class="p-4 hover:bg-gray-50 transition-colors cursor-pointer">
+<div class="flex gap-3">
+<div class="flex-shrink-0">
+<div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+<svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+</svg>
+</div>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold text-gray-800">Price Drop Alert!</p>
+<p class="text-xs text-gray-600 mt-1">Minimalist Leather Tote dropped by ₹150</p>
+<p class="text-xs text-gray-400 mt-1">2 hours ago</p>
+</div>
+</div>
+</div>
+<div class="p-4 hover:bg-gray-50 transition-colors cursor-pointer">
+<div class="flex gap-3">
+<div class="flex-shrink-0">
+<div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+<svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+</svg>
+</div>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold text-gray-800">New AI Insight</p>
+<p class="text-xs text-gray-600 mt-1">Your tracked items have price prediction updates</p>
+<p class="text-xs text-gray-400 mt-1">5 hours ago</p>
+</div>
+</div>
+</div>
+<div class="p-4 hover:bg-gray-50 transition-colors cursor-pointer">
+<div class="flex gap-3">
+<div class="flex-shrink-0">
+<div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+<svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m4-2H2m18-10h-4M3 13h2"></path>
+</svg>
+</div>
+</div>
+<div class="flex-1">
+<p class="text-sm font-semibold text-gray-800">Wardrobe Suggestion</p>
+<p class="text-xs text-gray-600 mt-1">New outfit ideas based on your saved items</p>
+<p class="text-xs text-gray-400 mt-1">1 day ago</p>
+</div>
+</div>
+</div>
+</div>
+<div class="p-3 text-center border-t border-gray-200">
+<button class="text-xs font-semibold text-primary-accent">View All Notifications</button>
+</div>
+</div>
+</div>
 </div>
 </div>
 </header>
@@ -390,21 +452,21 @@ colors: {
 <footer class="mobile-footer glass-footer shadow-2xl">
 <nav class="flex justify-around py-3 px-2">
 <button data-tab="discover" onclick="setActiveTab('discover')" class="tab-btn flex flex-col items-center p-2 text-primary-accent transition-all duration-300 active">
-<svg class="w-7 h-7 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+<svg class="w-7 h-7 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
 <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
 <polyline points="9 22 9 12 15 12 15 22"></polyline>
 </svg>
 <span class="text-xs font-semibold">Discover</span>
 </button>
 <button data-tab="search" onclick="openFilterModal()" class="tab-btn flex flex-col items-center p-2 text-gray-500 transition-all duration-300">
-<svg class="w-7 h-7 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+<svg class="w-7 h-7 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
 <circle cx="11" cy="11" r="8"></circle>
 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
 </svg>
 <span class="text-xs font-semibold">Filter</span>
 </button>
 <button data-tab="wardrobe" onclick="setActiveTab('wardrobe')" class="tab-btn flex flex-col items-center p-2 text-gray-500 transition-all duration-300">
-<svg class="w-7 h-7 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+<svg class="w-7 h-7 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
 <path d="M12 20V10"></path>
 <path d="M18.4 17.6a10 10 0 1 0-16.8-5.2"></path>
 <path d="M14.5 9.5 12 12 9.5 9.5"></path>
@@ -412,14 +474,14 @@ colors: {
 <span class="text-xs font-semibold">Wardrobe</span>
 </button>
 <button data-tab="tracker" onclick="setActiveTab('tracker')" class="tab-btn flex flex-col items-center p-2 text-gray-500 transition-all duration-300">
-<svg class="w-7 h-7 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+<svg class="w-7 h-7 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
 <path d="M12 2v10l4 4"></path>
 <circle cx="12" cy="12" r="10"></circle>
 </svg>
 <span class="text-xs font-semibold">Tracker</span>
 </button>
 <button data-tab="profile" onclick="setActiveTab('profile')" class="tab-btn flex flex-col items-center p-2 text-gray-500 transition-all duration-300">
-<svg class="w-7 h-7 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+<svg class="w-7 h-7 mb-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
 <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
 <circle cx="12" cy="7" r="4"></circle>
 </svg>
@@ -443,6 +505,9 @@ window.activeCharts = [];
 window.currentCategoryFilter = null;
 window.subscriptionTier = 'Free';
 window.isLoggedIn = localStorage.getItem('nexin_logged_in') === 'true';
+window.notificationsEnabled = localStorage.getItem('nexin_notifications') !== 'false';
+window.darkModeEnabled = localStorage.getItem('nexin_darkmode') === 'true';
+window.showNotifications = false;
 window.currentFilters = {
 priceRelevance: 'Best Price',
 brand: null,
@@ -475,6 +540,46 @@ window.isPremium = () => window.subscriptionTier === 'Premium';
 window.clearCharts = () => {
 window.activeCharts.forEach(chart => chart.destroy());
 window.activeCharts = [];
+};
+
+window.toggleNotifications = () => {
+const dropdown = document.getElementById('notifications-dropdown');
+if (dropdown) {
+dropdown.classList.toggle('hidden');
+}
+};
+
+// Close notifications when clicking outside
+document.addEventListener('click', (e) => {
+const dropdown = document.getElementById('notifications-dropdown');
+const notifButton = e.target.closest('button[onclick="toggleNotifications()"]');
+if (dropdown && !dropdown.contains(e.target) && !notifButton) {
+dropdown.classList.add('hidden');
+}
+});
+
+window.toggleNotificationsSetting = () => {
+window.notificationsEnabled = !window.notificationsEnabled;
+localStorage.setItem('nexin_notifications', window.notificationsEnabled);
+renderProfilePage();
+};
+
+window.toggleDarkMode = () => {
+window.darkModeEnabled = !window.darkModeEnabled;
+localStorage.setItem('nexin_darkmode', window.darkModeEnabled);
+renderProfilePage();
+};
+
+window.upgradeToPremium = () => {
+window.subscriptionTier = 'Premium';
+renderProfilePage();
+};
+
+window.cancelSubscription = () => {
+if (confirm('Are you sure you want to cancel your Premium subscription? You will lose access to all premium features.')) {
+window.subscriptionTier = 'Free';
+renderProfilePage();
+}
 };
 
 window.changeMainImage = (newSrc) => {
@@ -612,14 +717,20 @@ window.scrollTo({ top: 0, behavior: 'smooth' });
 
 // Main Render Function
 window.renderView = (view, searchQuery) => {
+const header = document.getElementById('app-header');
+  
 if (!window.isLoggedIn && view !== 'auth') {
+if (header) header.style.display = 'none';
 renderAuthPage();
 return;
 }
   
 if (view === 'auth') {
+if (header) header.style.display = 'none';
 renderAuthPage();
-} else if (view === 'logo') {
+} else {
+if (header) header.style.display = 'block';
+if (view === 'logo') {
 renderLogoPage();
 } else if (view === 'product-detail') {
 const product = window.mockProducts.find(p => p.id === window.currentProductDetailId);
@@ -633,11 +744,15 @@ renderWardrobeContent();
 } else if (view === 'profile') {
 renderProfilePage();
 }
+}
 };
 
 // Auth Page
 window.renderAuthPage = () => {
 const contentDiv = document.getElementById('content');
+const header = document.getElementById('app-header');
+if (header) header.style.display = 'none';
+  
 document.querySelectorAll('.tab-btn').forEach(btn => {
 btn.style.display = 'none';
 });
@@ -742,6 +857,8 @@ window.handleLogin = (e) => {
 e.preventDefault();
 window.isLoggedIn = true;
 localStorage.setItem('nexin_logged_in', 'true');
+const header = document.getElementById('app-header');
+if (header) header.style.display = 'block';
 document.querySelectorAll('.tab-btn').forEach(btn => {
 btn.style.display = 'flex';
 });
@@ -752,6 +869,8 @@ window.handleSignup = (e) => {
 e.preventDefault();
 window.isLoggedIn = true;
 localStorage.setItem('nexin_logged_in', 'true');
+const header = document.getElementById('app-header');
+if (header) header.style.display = 'block';
 document.querySelectorAll('.tab-btn').forEach(btn => {
 btn.style.display = 'flex';
 });
@@ -761,6 +880,8 @@ setActiveTab('logo');
 window.handleSignout = () => {
 window.isLoggedIn = false;
 localStorage.removeItem('nexin_logged_in');
+const header = document.getElementById('app-header');
+if (header) header.style.display = 'none';
 setActiveTab('auth');
 };
 
@@ -1314,24 +1435,36 @@ ${(!isPremium ? premiumFeatures : freeFeatures).map(f => `
 </div>
 
 ${!isPremium ? `
-<button onclick="window.subscriptionTier = 'Premium'; renderView('profile');" 
+<button onclick="upgradeToPremium()" 
 class="w-full py-5 bg-gradient-to-r from-premium-purple to-violet-600 text-white font-bold rounded-xl text-base futuristic-btn glow-premium shadow-xl">
 Upgrade to Premium - ₹199/mo
 </button>
 ` : `
+<div class="space-y-3">
 <p class="text-center text-sm text-gray-700 font-semibold bg-white/50 py-3 rounded-xl">Thanks for being a Premium member! 🎉</p>
+<button onclick="cancelSubscription()" 
+class="w-full py-4 bg-white text-red-600 font-bold rounded-xl text-sm border-2 border-red-600 futuristic-btn hover:bg-red-50 active:opacity-90 transition-all">
+Cancel Subscription
+</button>
+</div>
 `}
 </div>
 
 <div class="space-y-3">
 <h3 class="text-xl font-bold text-gray-800">Settings</h3>
-<button class="w-full flex justify-between items-center py-4 px-5 glass-card rounded-2xl border-2 border-gray-200 active:bg-gray-50 shadow-md transition-all">
+<button onclick="toggleNotificationsSetting()" class="w-full flex justify-between items-center py-4 px-5 glass-card rounded-2xl border-2 border-gray-200 active:bg-gray-50 shadow-md transition-all">
 <span class="text-sm text-gray-700 font-semibold">Price Drop Notifications</span>
-<span class="text-sm font-bold text-primary-accent bg-green-100 px-3 py-1 rounded-full">ON</span>
+<div class="relative inline-block w-12 h-6">
+<div class="absolute inset-0 rounded-full transition-colors ${window.notificationsEnabled ? 'bg-green-500' : 'bg-gray-300'}"></div>
+<div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform ${window.notificationsEnabled ? 'transform translate-x-6' : ''}"></div>
+</div>
 </button>
-<button class="w-full flex justify-between items-center py-4 px-5 glass-card rounded-2xl border-2 border-gray-200 active:bg-gray-50 shadow-md transition-all">
+<button onclick="toggleDarkMode()" class="w-full flex justify-between items-center py-4 px-5 glass-card rounded-2xl border-2 border-gray-200 active:bg-gray-50 shadow-md transition-all">
 <span class="text-sm text-gray-700 font-semibold">Dark Mode</span>
-<span class="text-sm font-bold text-gray-500 bg-gray-100 px-3 py-1 rounded-full">OFF</span>
+<div class="relative inline-block w-12 h-6">
+<div class="absolute inset-0 rounded-full transition-colors ${window.darkModeEnabled ? 'bg-gray-700' : 'bg-gray-300'}"></div>
+<div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform ${window.darkModeEnabled ? 'transform translate-x-6' : ''}"></div>
+</div>
 </button>
 </div>
 
@@ -1345,9 +1478,12 @@ Sign Out
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+const header = document.getElementById('app-header');
 if (!window.isLoggedIn) {
+if (header) header.style.display = 'none';
 setActiveTab('auth');
 } else {
+if (header) header.style.display = 'block';
 setActiveTab('logo');
 }
 });
